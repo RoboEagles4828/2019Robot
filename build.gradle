@@ -1,89 +1,62 @@
 plugins {
-    id 'com.gradle.build-scan' version '1.9.1'
-    id 'com.gradle.plugin-publish' version '0.9.9'
-    id 'me.champeau.buildscan-recipes' version '0.2.0'
-    id 'java-gradle-plugin'
-    id 'idea'
-    id 'maven-publish'
-    id 'groovy'
+    id "org.jetbrains.kotlin.jvm" version "1.2.50"
+    id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-3"     
+}
+
+def ROBOT_MAIN_CLASS = "frc.team0000.robot.MainKt"
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        roboRIO("roborio") {
+            // Team number is loaded either from the .wpilib/wpilib_preferences.json
+            // or from command line. If not found an exception will be thrown.
+            // You can use getTeamOrDefault(team) instead of getTeamNumber if you
+            // want to store a team number in this file.
+            team = frc.getTeamNumber()
+        }
+    }
+    artifacts {
+        frcJavaArtifact('frcJava') {
+            targets << "roborio"
+            // Debug can be overridden by command line, for use with VSCode
+            debug = frc.getDebugOrDefault(false)
+        }
+        // Built in artifact to deploy arbitrary files to the roboRIO.
+        fileTreeArtifact('frcStaticFileDeploy') {
+            // The directory below is the local directory to deploy
+            files = fileTree(dir: 'src/main/deploy')
+            // Deploy to RoboRIO target, into /home/lvuser/deploy
+            targets << "roborio"
+            directory = '/home/lvuser/deploy'
+        }
+    }
 }
 
 repositories {
-    maven {
-        url "https://plugins.gradle.org/m2/"
-    }
-    mavenLocal()
+    mavenCentral()
 }
 
+// Defining my dependencies. In this case, WPILib (+ friends)
 dependencies {
-//    compile 'jaci.gradle:EmbeddedTools:2018.10.16a'
-    compile 'gradle.plugin.jaci.gradle:EmbeddedTools:2018.10.16a'
-    compile 'de.undercouch:gradle-download-task:3.1.2'
-    compile 'com.google.code.gson:gson:2.2.4'
-    compile 'gradle.plugin.edu.wpi.first:gradle-cpp-vscode:0.5.0'
+    compile wpi.deps.wpilib()
+    compile wpi.deps.vendor.java()
+    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
-    compile 'com.jcraft:jsch:0.1.53'
-
-    testCompile('org.spockframework:spock-core:1.1-groovy-2.4') {
-        exclude group: 'org.codehaus.groovy'
-    }
-    testCompile gradleTestKit()
+    // We need to add the Kotlin stdlib in order to use most Kotlin language features.
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
 }
 
-buildScan {
-    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
-    licenseAgree = 'yes'
+// Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
+// in order to make them all available at runtime. Also adding the manifest so WPILib
+// knows where to look for our Robot Class.
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    manifest edu.wpi.first.gradlerio.GradleRIOPlugin.javaManifest(ROBOT_MAIN_CLASS)
 }
-
-buildScanRecipes {
-    recipes 'git-commit', 'git-status', 'travis-ci', 'disk-usage', 'gc-stats'
-}
-
-group = "edu.wpi.first"
-archivesBaseName = "GradleRIO"
-version = "2019.1.1-beta-1"
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-pluginBundle {
-    website = 'https://github.com/wpilibsuite/GradleRIO'
-    vcsUrl = 'https://github.com/wpilibsuite/GradleRIO'
-    description = 'Managing FRC projects, the Gradle way (2019+)'
-    tags = ['frc', 'wpilib', 'gradlerio']
-
-    plugins {
-        gradleRio {
-            id = "${project.group}.${project.archivesBaseName}"
-            displayName = 'GradleRIO'
-        }
-    }
-}
-
-publishing {
-    publications {
-        plugin(MavenPublication) {
-            artifact(jar) {
-                if (project.hasProperty('localPublish')) {
-                    classifier null
-                    groupId 'gradle.plugin.' + group
-                }
-            }
-        }
-    }
-}
-
-gradlePlugin {
-    plugins {
-        gradleRio {
-            id = 'edu.wpi.first.GradleRIO'
-            implementationClass = 'edu.wpi.first.gradlerio.GradleRIOPlugin'
-        }
-    }
-}
-
-apply from: 'versionupdates.gradle'
 
 wrapper {
-    gradleVersion = '4.9'
+    gradleVersion = '5.0'
 }
