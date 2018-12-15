@@ -3,7 +3,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.1.1-beta-3"     
 }
 
-def ROBOT_MAIN_CLASS = "frc.team0000.robot.MainKt"
+def ROBOT_MAIN_CLASS = "frc.team4828.robot.MainKt"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project EmbeddedTools.
@@ -14,7 +14,7 @@ deploy {
             // or from command line. If not found an exception will be thrown.
             // You can use getTeamOrDefault(team) instead of getTeamNumber if you
             // want to store a team number in this file.
-            team = frc.getTeamNumber()
+            team = 4828
         }
     }
     artifacts {
