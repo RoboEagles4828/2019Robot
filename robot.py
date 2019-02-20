@@ -8,10 +8,12 @@ import os
 import navx
 
 from components.low.lift import Lift
+from components.low.drivetrain import DriveTrain
 
 class Robot(magicbot.MagicRobot):
 
     lift: Lift
+    drive: DriveTrain
 
     def createObjects(self):
         self.logger = logging.getLogger("Robot")
@@ -64,9 +66,9 @@ class Robot(magicbot.MagicRobot):
         # Arm
         try:
             if self.joystick.getRawButton(self.buttons["joy1"]["liftup"]):
-                self.lift.liftUp()
+                self.lift.liftUp(.3)
             elif self.joystick.getRawButton(self.buttons["joy1"]["liftdown"]):
-                self.lift.liftDown()
+                self.lift.liftDown(.3)
             else:
                 self.lift.stop()
         except:
