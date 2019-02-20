@@ -1,6 +1,7 @@
 import wpilib
 import ctre
 import navx
+import logging
 
 class Lift:
     navx: navx.AHRS
@@ -8,8 +9,8 @@ class Lift:
     lift_front: ctre.WPI_TalonSRX
     lift_back: ctre.WPI_TalonSRX
 
-    lift_drive_left: wpilib.Victor
-    lift_drive_right: wpilib.Victor
+    lift_drive_left: ctre.WPI_VictorSPX
+    lift_drive_right: ctre.WPI_VictorSPX
 
     lift_top_limit_front: wpilib.DigitalInput
     lift_top_limit_back: wpilib.DigitalInput
@@ -20,6 +21,7 @@ class Lift:
     lift_prox_back: wpilib.DigitalInput
 
     def __init__(self):
+        self.logger = logging.getLogger("Lift")
         self.finishedFront = True
         self.finishedBack = True
         self.front_speed = 0
@@ -30,12 +32,16 @@ class Lift:
         self.drive_speed = speed
 
     def liftUp(self, speed):
-        self.frontUp(speed + (1 - speed) * (self.navx.getPitch() / 20))
-        self.backUp(speed + (1 - speed) * -(self.navx.getPitch() / 20))
+        self.frontUp(-speed)
+        #self.backUp(max(-speed / 2 + max(self.navx.getPitch() / 2, 0), 0))
+        self.backUp(-speed/2)
+        self.logger.info(self.navx.getPitch())
 
     def liftDown(self, speed):
-        self.frontUp(speed + (1 - speed) * -(self.navx.getPitch() / 20))
-        self.backUp(speed + (1 - speed) * (self.navx.getPitch() / 20))
+        self.frontUp(speed)
+        self.backUp(speed / 2)
+
+        self.logger.info(self.navx.getPitch())
 
     def backUp(self, speed):
         self.back_speed = speed

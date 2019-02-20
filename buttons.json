@@ -1,6 +1,16 @@
 {
-     "joy1": {
-        "liftup": 5,
-        "liftdown": 3
+     "lift": {
+        "liftup": 9,
+        "liftdown": 11,
+        "fwd": 12
+     },
+
+     "arm": {
+      "arm_up": 2,
+      "arm_down": 3,
+      "wrist_up": 4,
+      "wrist_down": 5,
+      "intake_in": 6,
+      "intake_out": 1
      }
 }
