@@ -19,25 +19,20 @@ class Robot(magicbot.MagicRobot):
 
     def createObjects(self):
         self.logger = logging.getLogger("Robot")
-        
         self.joystick = wpilib.Joystick(0)
-
         # Timer
         self.globalTimer = wpilib.Timer()
         self.globalTimer.start()
-
         # Load ports and buttons
         with open("../ports.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/ports.json") as f:
             ports = json.load(f)
         with open("../buttons.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/buttons.json") as f:
             self.buttons = json.load(f)
-        
         # Drive
         self.front_left = ctre.WPI_TalonSRX(ports["drive"]["front_left"])
         self.front_right = ctre.WPI_TalonSRX(ports["drive"]["front_right"])
         self.back_left = ctre.WPI_TalonSRX(ports["drive"]["back_left"])
         self.back_right = ctre.WPI_TalonSRX(ports["drive"]["back_right"])
-
         # Arm
         self.arm_left = ctre.WPI_TalonSRX(ports["arm"]["arm_left"])
         self.arm_right = ctre.WPI_TalonSRX(ports["arm"]["arm_right"])
@@ -45,25 +40,18 @@ class Robot(magicbot.MagicRobot):
         self.wrist_enc = wpilib.AnalogInput(ports["arm"]["wrist_enc"])
         self.intake = ctre.WPI_VictorSPX(ports["arm"]["intake"])
         self.hatch = wpilib.DoubleSolenoid(ports["arm"]["hatch_in"], ports["arm"]["hatch_out"])
-
-
         # Lift
         self.navx = navx.ahrs.AHRS.create_spi()
-
-        self.lift_front = ctre.WPI_TalonSRX(ports["lift"]["lifter"]["front"])
-        self.lift_back = ctre.WPI_TalonSRX(ports["lift"]["lifter"]["back"])
-
+        self.lift_front = ctre.WPI_TalonSRX(ports["lift"]["lift"]["front"])
+        self.lift_back = ctre.WPI_TalonSRX(ports["lift"]["lift"]["back"])
         self.lift_drive_left = ctre.WPI_VictorSPX(ports["lift"]["drive"]["left"])
         self.lift_drive_right = ctre.WPI_VictorSPX(ports["lift"]["drive"]["right"])
-
         self.lift_top_limit_front = wpilib.DigitalInput(ports["lift"]["limit"]["top_front"])
         self.lift_top_limit_back = wpilib.DigitalInput(ports["lift"]["limit"]["top_back"])
         self.lift_bot_limit_front = wpilib.DigitalInput(ports["lift"]["limit"]["bot_front"])
         self.lift_bot_limit_back = wpilib.DigitalInput(ports["lift"]["limit"]["bot_back"])
-
         self.lift_prox_front = wpilib.DigitalInput(ports["lift"]["prox"]["front"])
         self.lift_prox_back = wpilib.DigitalInput(ports["lift"]["prox"]["back"])
-
 
     def teleopInit(self):
         print("Starting Teleop")
@@ -77,14 +65,14 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Lift
         try:
-            if self.joystick.getRawButton(self.buttons["lift"]["liftup"]):
-                self.lift.liftUp(1)
-            elif self.joystick.getRawButton(self.buttons["lift"]["liftdown"]):
-                self.lift.liftDown(.8)
-            elif self.joystick.getRawButton(self.buttons["lift"]["fwd"]):
-                self.lift.drive(.5)
+            if self.joystick.getRawButton(self.buttons["lift"]["drive"]):
+                self.lift.drive(0.5)
+            elif self.joystick.getRawButton(self.buttons["lift"]["up"]):
+                self.lift.liftUp(1.0)
+            elif self.joystick.getRawButton(self.buttons["lift"]["down"]):
+                self.lift.liftDown(0.8)
             else:
-                self.lift.stop()
+                self.lift.disable()
         except:
             self.onException()
         # Arm

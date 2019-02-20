@@ -1,42 +1,37 @@
 {
-   "arm": {
-      "arm_left": 7,
-      "arm_right": 8,
-      "wrist": 12,
-      "wrist_enc": 2,
-      "intake": 11,
-      "hatch_in": 4,
-      "hatch_out": 5
-   },
-
-     "drive": {
-      "front_left": 1,
-      "front_right": 3,
-      "back_left": 2,
-      "back_right": 4
-     },
-
-     "lift": {
-        "lifter": {
-           "front": 5,
-           "back": 6
+    "arm": {
+        "arm_left": 7,
+        "arm_right": 8,
+        "wrist": 12,
+        "wrist_enc": 2,
+        "intake": 11,
+        "hatch_in": 4,
+        "hatch_out": 5
+    },
+    "drive": {
+        "front_left": 1,
+        "front_right": 3,
+        "back_left": 2,
+        "back_right": 4
+    },
+    "lift": {
+        "lift": {
+            "front": 5,
+            "back": 6
         },
-
         "drive": {
-           "left": 9,
-           "right": 10
+            "left": 9,
+            "right": 10
         },
-
         "limit": {
-           "top_front": 1,
-           "top_back": 2,
-           "bot_front": 3,
-           "bot_back": 4
+            "top_front": 1,
+            "top_back": 2,
+            "bot_front": 3,
+            "bot_back": 4
         },
-
         "prox": {
-           "front": 5,
-           "back": 6
+            "front": 5,
+            "back": 6
         }
-     }
+    }
 }
