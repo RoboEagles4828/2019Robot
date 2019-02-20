@@ -4,10 +4,33 @@
      },
 
      "drive": {
-        
+      "front_left": 1,
+      "front_right": 3,
+      "back_left": 0,
+      "back_right": 2
      },
 
      "lift": {
-        "limit": 9
+        "lifter": {
+           "front": 5,
+           "back": 6
+        },
+
+        "drive": {
+           "left": 9,
+           "right": 10
+        },
+
+        "limit": {
+           "top_front": 1,
+           "top_back": 2,
+           "bot_front": 3,
+           "bot_back": 4
+        },
+
+        "prox": {
+           "front": 5,
+           "back": 6
+        }
      }
 }

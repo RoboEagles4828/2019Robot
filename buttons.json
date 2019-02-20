@@ -1,3 +1,6 @@
 {
-     
+     "joy1": {
+        "liftup": 5,
+        "liftdown": 3
+     }
 }
