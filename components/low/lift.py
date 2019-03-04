@@ -10,12 +10,10 @@ class Lift:
     lift_back: ctre.WPI_TalonSRX
     lift_drive_left: ctre.WPI_VictorSPX
     lift_drive_right: ctre.WPI_VictorSPX
-    lift_top_limit_front: wpilib.DigitalInput
-    lift_top_limit_back: wpilib.DigitalInput
-    lift_bot_limit_front: wpilib.DigitalInput
-    lift_bot_limit_back: wpilib.DigitalInput
     lift_prox_front: wpilib.DigitalInput
     lift_prox_back: wpilib.DigitalInput
+
+    back_ratio = 3/4
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
@@ -28,17 +26,18 @@ class Lift:
         self.back_speed = 0
         self.drive_speed = 0
 
-    def drive(self, speed):
+    def setDriveSpeed(self, speed):
         self.drive_speed = speed
 
-    def liftUp(self, speed):
+    def setFrontSpeed(self, speed):
         self.front_speed = speed
-        #self.back_speed = max(speed / 2 - max(self.navx.getPitch() / 2, 0), 0)
-        self.back_speed = speed / 2
 
-    def liftDown(self, speed):
-        self.front_speed = -speed
-        self.back_speed = -speed / 2
+    def setBackSpeed(self, speed):
+        self.back_speed = speed
+
+    def setLiftSpeed(self, speed):
+        self.setFrontSpeed(speed)
+        self.setBackSpeed(self.back_ratio * speed)
 
     def getProxFront(self):
         return not self.lift_prox_front.get()
