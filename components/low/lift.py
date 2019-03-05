@@ -15,7 +15,7 @@ class Lift:
     lift_limit_front: wpilib.DigitalInput
     lift_limit_back: wpilib.DigitalInput
 
-    back_ratio = 3/4
+    back_ratio = 7/8
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
@@ -54,6 +54,12 @@ class Lift:
 
     def getLimitBack(self):
         return not self.lift_limit_back.get()
+
+    def getFrontPos(self):
+        return self.front_pos
+
+    def getBackPos(self):
+        return self.back_pos
 
     def debugNavx(self):
         return self.navx.getPitch()

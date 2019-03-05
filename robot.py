@@ -6,19 +6,19 @@ import magicbot
 import wpilib
 import ctre
 import navx
-from components.low.lift import Lift
+
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
-from components.high.autoLift import AutoLift
-
 from components.motionprofiling.arm_mover import ArmMover
+from components.low.lift import Lift
+from components.high.lift_mover import LiftMover
 
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     arm: Arm
     lift: Lift
-    autolift: AutoLift
+    lift_mover: LiftMover
     arm_mover: ArmMover
 
     arm_speed = 0.3
@@ -72,7 +72,6 @@ class Robot(magicbot.MagicRobot):
         self.navx.reset()
 
     def teleopPeriodic(self):
-        print(self.navx.getPitch())
         # Drive
         try:
             self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist() / 2)
@@ -150,10 +149,10 @@ class Robot(magicbot.MagicRobot):
                 self.lift.setLiftSpeed(0)
         except:
             self.onException()
-        # Auto lift
+        # Lift mover
         try:
             if self.getButton(self.drive_joystick, "lift", "auto"):
-                self.autolift.enable()
+                self.lift_mover.enable()
         except:
             self.onException()
         # Encoders
