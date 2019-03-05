@@ -36,7 +36,7 @@ class Robot(magicbot.MagicRobot):
         # Arm
         self.arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
         self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
-        self.wrist = ctre.VictorSPX(self.ports["arm"]["wrist"])
+        self.wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
         self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
         self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
         self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
