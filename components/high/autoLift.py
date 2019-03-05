@@ -8,15 +8,8 @@ class AutoLift:
     lift: Lift
     drive: DriveTrain
 
-    def __init__(self, speed):
-        self.speed = speed
+    def __init__(self):
         self.enabled = False
-
-    def liftUp(self):
-        self.lift.setLiftSpeed(self.speed)
-
-    def liftDown(self):
-        self.lift.setLiftSpeed(-self.speed)
 
     def enable(self):
         self.enabled = True
@@ -26,24 +19,24 @@ class AutoLift:
 
     def execute(self):
         if self.enabled:
-            # Lift up
-            self.liftUp()
-            if not self.lift.isFinished():
-                return
+            while not self.lift.get_limit_front_top() or not self.lift.get_limit_rear_top() :
+                self.lift.setLiftSpeed(0.5) 
             # Drive lift and drivetrain
-            self.lift.drive(0.3)
-            self.drive.setSpeeds(0.3, 0.3)
-            if not self.lift.getProxFront():
-                return
-            # Lift front up
-            self.lift.setFrontSpeed(-self.speed)
-            if not self.lift.isFinished():
-                return
-            # Lift back up
-            self.lift.setBackSpeed(-self.speed)
-            if not self.lift.isFinished():
-                return
-            # Disable lift and drivetrain
-            self.lift.disable()
-            self.drive.setSpeeds(0, 0)
+            self.lift.setLiftSpeed(0) 
+            while not self.lift.getProxFront():
+                self.lift.setDriveSpeed(0.5)
+                self.drive.setSpeeds(0.1, 0.1) #Need to calibrate
+            self.drive.setSpeeds(0,0)
+            self.lift.setDriveSpeed(0)
+            while not self.lift.get_limit_front_bottom():
+                self.lift.setFrontSpeed(-0.5)
+            self.lift.setFrontSpeed(0)
+            while not self.lift.getProxBack():
+                self.lift.setDriveSpeed(0.5)
+                self.drive.setSpeeds(0.1, 0.1) #Need to calibrate
+            self.drive.setSpeeds(0,0)
+            self.lift.setDriveSpeed(0)
+            while not self.lift.get_limit_rear_bottom():
+                self.lift.setBackSpeed(-0.5)
+            self.lift.setBackSpeed(0)
             self.enabled = False
