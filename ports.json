@@ -24,14 +24,14 @@
             "right": 10
         },
         "limit": {
-            "top_front": 1,
-            "top_back": 2,
-            "bot_front": 3,
-            "bot_back": 4
+            "top_front": 3,
+            "top_back": 5,
+            "bot_front": 9,
+            "bot_back": 8
         },
         "prox": {
-            "front": 5,
-            "back": 6
+            "front": 0,
+            "back": 1
         }
     }
 }
