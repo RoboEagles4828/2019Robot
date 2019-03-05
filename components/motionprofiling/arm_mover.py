@@ -11,27 +11,27 @@ class ArmMover:
     arm_set = {
         "hatch_in": 0,
         "hatch_out_1": 520,
-        "hatch_out_2": 2333,
-        "ball_in": 143,
+        "hatch_out_2": 2335,
+        "ball_in": 145,
         "ball_out_1": 1200,
-        "ball_out_2": 2333
+        "ball_out_2": 2335
     }
     wrist_set = {
-        "hatch_in": 2293,
-        "hatch_out_1": 2861,
-        "hatch_out_2": 2204,
+        "hatch_in": 2295,
+        "hatch_out_1": 2860,
+        "hatch_out_2": 2205,
         "ball_in": 2080,
-        "ball_out_1": 1707,
-        "ball_out_2": 1771
+        "ball_out_1": 1705,
+        "ball_out_2": 1770
     }
-    arm_max_pos_speed = 12
-    arm_min_speed = 0.2
+    arm_max_pos_speed = 8
+    arm_min_speed = 0.1
     arm_max_speed = 0.8
-    arm_max_acc = 0.05
-    wrist_max_pos_speed = 12
+    arm_max_acc = 0.03
+    wrist_max_pos_speed = 8
     wrist_min_speed = 0.1
     wrist_max_speed = 0.8
-    wrist_max_acc = 0.05
+    wrist_max_acc = 0.03
     arm_p = 10 / 1024
     arm_i = 0 / 1024
     arm_d = 0 / 1024
@@ -90,7 +90,7 @@ class ArmMover:
         return self.arm_enabled or self.wrist_enabled
 
     def debug(self):
-        logging.info("\nControl:    Enabled  |  Pos  |  Set  |  Err  |  Out\nArm Control: %7r | %5d | %5d | %5d | %8f\nWrist Control: %5r | %5d | %5d | %5d | %8f",
+        logging.info("\n       |  Ctl  |  Pos  |  Set  |  Err  |  Out  |\nArm    | %5r | %5d | %5d | %5d | %5.3f |\nWrist  | %5r | %5d | %5d | %5d | %5.3f |",
                      self.arm_enabled, self.arm_pos, self.arm_set[self.pos], self.arm_err, self.arm_speed,
                      self.wrist_enabled, self.wrist_pos, self.wrist_set[self.pos], self.wrist_err, self.wrist_speed
                      )
@@ -121,7 +121,8 @@ class ArmMover:
             self.arm_base_speed = arm_base_speed
             self.arm_err = arm_err
             # Disable arm if stopped
-            if round(self.arm_speed, 2) == 0:
+            if arm_base_speed == 0:
+                self.arm.setArmSpeed(0)
                 self.arm_enabled = False
         if self.wrist_enabled:
             # Get wrist position and position speed
@@ -148,5 +149,6 @@ class ArmMover:
             self.wrist_base_speed = wrist_base_speed
             self.wrist_err = wrist_err
             # Disable wrist if stopped
-            if round(self.wrist_speed, 2) == 0:
+            if wrist_base_speed == 0:
+                self.arm.setWristSpeed(0)
                 self.wrist_enabled = False

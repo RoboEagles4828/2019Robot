@@ -32,8 +32,8 @@ class FakeArm:
         return self.wrist_pos
 
     def execute(self):
-        self.arm_pos += self.arm_speed * 10
-        self.wrist_pos += self.wrist_speed * 10
+        self.arm_pos += self.arm_speed * 7
+        self.wrist_pos += self.wrist_speed * 7
 
 def test_arm_mover(robot):
     arm = FakeArm()
