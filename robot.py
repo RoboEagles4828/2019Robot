@@ -17,9 +17,9 @@ class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     arm: Arm
+    arm_mover: ArmMover
     lift: Lift
     lift_mover: LiftMover
-    arm_mover: ArmMover
 
     arm_speed = 0.3
     wrist_speed = 0.6
