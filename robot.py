@@ -75,7 +75,7 @@ class Robot(magicbot.MagicRobot):
         print(self.navx.getPitch())
         # Drive
         try:
-            self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist())
+            self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist() / 2)
         except:
             self.onException()
         # Arm
@@ -83,13 +83,17 @@ class Robot(magicbot.MagicRobot):
             if self.joystick.getRawButton(self.buttons["lift"]["drive"]):
                 self.lift.setDriveSpeed(0.5)
             elif self.joystick.getRawButton(self.buttons["lift"]["up"]):
-                self.lift.setLiftSpeed(1.0)
+                self.lift.setLiftSpeed(0.5)
             elif self.joystick.getRawButton(self.buttons["lift"]["down"]):
-                self.lift.setLiftSpeed(-0.8)
-            if self.getButton("arm", "arm_up"):
+                self.lift.setLiftSpeed(-0.5)
+            else:
+                self.lift.setLiftSpeed(0)
+                self.lift.setDriveSpeed(0)
+                
+            if self.getButton(self.joystick, "arm", "arm_up"):
                 self.arm_mover.disable()
                 self.arm.setArmSpeed(self.arm_speed)
-            elif self.getButton("arm", "arm_down"):
+            elif self.getButton(self.joystick, "arm", "arm_down"):
                 self.arm_mover.disable()
                 self.arm.setArmSpeed(-self.arm_speed)
             else:
@@ -99,10 +103,10 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Wrist
         try:
-            if self.getButton("arm", "wrist_up"):
+            if self.getButton(self.joystick, "arm", "wrist_up"):
                 self.arm_mover.disable()
                 self.arm.setWristSpeed(self.wrist_speed)
-            elif self.getButton("arm", "wrist_down"):
+            elif self.getButton(self.joystick, "arm", "wrist_down"):
                 self.arm_mover.disable()
                 self.arm.setWristSpeed(-self.wrist_speed)
             else:
@@ -112,26 +116,26 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Arm mover
         try:
-            if self.getButton("arm", "hatch_in"):
+            if self.getButton(self.drive_joystick, "arm", "hatch_in"):
                 self.arm_mover.set("hatch_in")
-            elif self.getButton("arm", "hatch_out_1"):
+            elif self.getButton(self.drive_joystick, "arm", "hatch_out_1"):
                 self.arm_mover.set("hatch_out_1")
-            elif self.getButton("arm", "hatch_out_2"):
+            elif self.getButton(self.drive_joystick, "arm", "hatch_out_2"):
                 self.arm_mover.set("hatch_out_2")
-            elif self.getButton("arm", "ball_in"):
+            elif self.getButton(self.drive_joystick, "arm", "ball_in"):
                 self.arm_mover.set("ball_in")
-            elif self.getButton("arm", "ball_out_1"):
+            elif self.getButton(self.drive_joystick, "arm", "ball_out_1"):
                 self.arm_mover.set("ball_out_1")
-            elif self.getButton("arm", "ball_out_2"):
+            elif self.getButton(self.drive_joystick, "arm", "ball_out_2"):
                 self.arm_mover.set("ball_out_2")
         except:
             self.onException()
         # Intake
         try:
-            if self.getButton("arm", "intake_out"):
+            if self.getButton(self.joystick ,"arm", "intake_out"):
                 self.arm_mover.disable()
                 self.arm.setIntakeSpeed(self.intake_speed)
-            elif self.getButton("arm", "intake_in"):
+            elif self.getButton(self.joystick, "arm", "intake_in"):
                 self.arm_mover.disable()
                 self.arm.setIntakeSpeed(-self.intake_speed)
             else:
@@ -147,12 +151,12 @@ class Robot(magicbot.MagicRobot):
                 
         # Hatch
         try:
-            self.arm.setHatch(self.getButton("arm", "hatch"))
+            self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
         except:
             self.onException()
         # Encoders
         try:
-            if self.getButton("arm", "zero_arm_enc"):
+            if self.getButton(self.joystick, "arm", "zero_arm_enc"):
                 self.arm.zeroArmEnc()
         except:
             self.onException()
@@ -166,8 +170,8 @@ class Robot(magicbot.MagicRobot):
         self.drive.setSpeeds(0, 0.5)
         self.timer.delay(1)
 
-    def getButton(self, group, button):
-        return self.joystick.getRawButton(self.buttons[group][button])
+    def getButton(self, joy, group, button):
+        return joy.getRawButton(self.buttons[group][button])
 
 logging.basicConfig(level=logging.DEBUG)
 if __name__ == '__main__':
