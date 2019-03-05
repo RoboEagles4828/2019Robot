@@ -5,8 +5,8 @@ class Arm:
 
     arm_left: ctre.WPI_TalonSRX
     arm_right: ctre.WPI_TalonSRX
-    wrist: wpilib.VictorSP
-    intake: ctre.WPI_TalonSRX
+    wrist: ctre.WPI_VictorSPX
+    intake: ctre.WPI_VictorSPX
     hatch: wpilib.DoubleSolenoid
     wrist_enc: wpilib.AnalogInput
 
