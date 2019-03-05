@@ -17,6 +17,7 @@ class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     arm: Arm
+    lift: Lift
     autolift: AutoLift
     arm_mover: ArmMover
 
@@ -49,10 +50,10 @@ class Robot(magicbot.MagicRobot):
         self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["back"])
         self.lift_drive_left = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["left"])
         self.lift_drive_right = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["right"])
-        self.lift_top_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
-        self.lift_top_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
-        self.lift_bot_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
-        self.lift_bot_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
+        self.lift_limit_front_bottom = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
+        self.lift_limit_rear_top = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
+        self.lift_limit_front_top = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
+        self.lift_limit_rear_bottom = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
         self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
         self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
         # Joystick
