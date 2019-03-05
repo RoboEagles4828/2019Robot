@@ -50,10 +50,8 @@ class Robot(magicbot.MagicRobot):
         self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["back"])
         self.lift_drive_left = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["left"])
         self.lift_drive_right = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["right"])
-        self.lift_limit_front_bottom = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
-        self.lift_limit_rear_top = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
-        self.lift_limit_front_top = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
-        self.lift_limit_rear_bottom = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
+        self.lift_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["front"])
+        self.lift_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["back"])
         self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
         self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
         # Joystick
@@ -80,11 +78,11 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Arm
         try:
-            if self.joystick.getRawButton(self.buttons["lift"]["drive"]):
+            if self.drive_joystick.getRawButton(self.buttons["lift"]["drive"]):
                 self.lift.setDriveSpeed(0.5)
-            elif self.joystick.getRawButton(self.buttons["lift"]["up"]):
+            elif self.drive_joystick.getRawButton(self.buttons["lift"]["up"]):
                 self.lift.setLiftSpeed(1.0)
-            elif self.joystick.getRawButton(self.buttons["lift"]["down"]):
+            elif self.drive_joystick.getRawButton(self.buttons["lift"]["down"]):
                 self.lift.setLiftSpeed(-0.8)
             if self.getButton("arm", "arm_up"):
                 self.arm_mover.disable()
@@ -138,13 +136,12 @@ class Robot(magicbot.MagicRobot):
                 self.arm.setIntakeSpeed(0)
         except:
             self.onException()
-        #Autolift
+        # Auto lift
         try:
-            if self.joystick.getRawButton(15): #**CHANGE BUTTON*
+            if self.drive_joystick.getRawButton(1):
                 self.autolift.enable()
         except:
             self.onException()
-                
         # Hatch
         try:
             self.arm.setHatch(self.getButton("arm", "hatch"))
