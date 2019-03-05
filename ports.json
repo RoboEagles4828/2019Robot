@@ -6,30 +6,12 @@
         "back_right": 2
     },
     "arm": {
-        "arm_left": 7,
-        "arm_right": 8,
-        "wrist": 12,
-        "intake": 11,
+        "arm_left": 3,
+        "arm_right": 4,
+        "wrist": 1,
+        "intake": 2,
         "hatch_in": 4,
         "hatch_out": 5,
         "wrist_enc": 2
-    },
-    "lift": {
-        "drive": {
-            "left": 9,
-            "right": 10
-        },
-        "lift": {
-            "front": 5,
-            "back": 6
-        },
-        "prox": {
-            "front": 0,
-            "back": 1
-        },
-        "limit": {
-            "front": 3,
-            "back": 5
-        }
     }
 }

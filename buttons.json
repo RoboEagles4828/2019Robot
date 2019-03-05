@@ -14,11 +14,5 @@
         "intake_out": 1,
         "hatch": 13,
         "zero_arm_enc": 14
-    },
-    "lift": {
-        "drive": 12,
-        "up": 9,
-        "down": 11,
-        "auto": 1
     }
 }

@@ -18,14 +18,10 @@ class Robot(magicbot.MagicRobot):
     drive: DriveTrain
     arm: Arm
     arm_mover: ArmMover
-    lift: Lift
-    lift_mover: LiftMover
 
     arm_speed = 0.3
     wrist_speed = 0.6
     intake_speed = 1.0
-    lift_drive_speed = 0.5
-    lift_speed = 0.5
 
     def createObjects(self):
         self.logger = logging.getLogger("Robot")
@@ -46,16 +42,6 @@ class Robot(magicbot.MagicRobot):
         self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
         self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
         self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
-        # Lift
-        self.navx = navx.ahrs.AHRS.create_spi()
-        self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["front"])
-        self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["back"])
-        self.lift_drive_left = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["left"])
-        self.lift_drive_right = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["right"])
-        self.lift_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["front"])
-        self.lift_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["back"])
-        self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
-        self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
         # Joystick
         self.joystick = wpilib.Joystick(0)
         self.drive_joystick = wpilib.Joystick(1)
@@ -69,7 +55,6 @@ class Robot(magicbot.MagicRobot):
 
     def teleopInit(self):
         print("Starting Teleop")
-        self.navx.reset()
 
     def teleopPeriodic(self):
         # Drive
@@ -134,25 +119,6 @@ class Robot(magicbot.MagicRobot):
         # Hatch
         try:
             self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
-        except:
-            self.onException()
-        # Lift
-        try:
-            if self.getButton(self.drive_joystick, "lift", "drive"):
-                self.lift.setDriveSpeed(self.lift_drive_speed)
-            elif self.getButton(self.drive_joystick, "lift", "up"):
-                self.lift.setLiftSpeed(self.lift_speed)
-            elif self.getButton(self.drive_joystick, "lift", "down"):
-                self.lift.setLiftSpeed(-self.lift_speed)
-            else:
-                self.lift.setDriveSpeed(0)
-                self.lift.setLiftSpeed(0)
-        except:
-            self.onException()
-        # Lift mover
-        try:
-            if self.getButton(self.drive_joystick, "lift", "auto"):
-                self.lift_mover.enable()
         except:
             self.onException()
         # Encoders
