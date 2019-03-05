@@ -2,10 +2,10 @@ import ctre
 
 class DriveTrain:
 
-    front_left: ctre.TalonSRX
-    front_right: ctre.TalonSRX
-    back_left: ctre.TalonSRX
-    back_right: ctre.TalonSRX
+    front_left: ctre.WPI_TalonSRX
+    front_right: ctre.WPI_TalonSRX
+    back_left: ctre.WPI_TalonSRX
+    back_right: ctre.WPI_TalonSRX
 
     def __init__(self):
         self.speed_left = 0
