@@ -5,6 +5,7 @@ import os
 import magicbot
 import wpilib
 import ctre
+import navx
 
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
@@ -28,17 +29,29 @@ class Robot(magicbot.MagicRobot):
         with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "buttons.json") as f:
             self.buttons = json.load(f)
         # Drive
-        self.front_left = wpilib.Spark(self.ports["drive"]["front_left"])
-        self.front_right = wpilib.Spark(self.ports["drive"]["front_right"])
-        self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
-        self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
+        self.front_left = ctre.WPI_TalonSRX(self.ports["drive"]["front_left"])
+        self.front_right = ctre.WPI_TalonSRX(self.ports["drive"]["front_right"])
+        self.back_left = ctre.WPI_TalonSRX(self.ports["drive"]["back_left"])
+        self.back_right = ctre.WPI_TalonSRX(self.ports["drive"]["back_right"])
         # Arm
         self.arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
         self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
-        self.wrist = wpilib.VictorSP(self.ports["arm"]["wrist"])
-        self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
-        self.intake = ctre.WPI_TalonSRX(self.ports["arm"]["intake"])
+        self.wrist = ctre.VictorSPX(self.ports["arm"]["wrist"])
+        self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
         self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
+        self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
+        # Lift
+        self.navx = navx.ahrs.AHRS.create_spi()
+        self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["front"])
+        self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["back"])
+        self.lift_drive_left = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["left"])
+        self.lift_drive_right = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["right"])
+        self.lift_top_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
+        self.lift_top_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
+        self.lift_bot_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
+        self.lift_bot_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
+        self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
+        self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
         # Joystick
         self.joystick = wpilib.Joystick(0)
         self.drive_joystick = wpilib.Joystick(1)
@@ -52,6 +65,7 @@ class Robot(magicbot.MagicRobot):
 
     def teleopInit(self):
         print("Starting Teleop")
+        self.navx.reset()
 
     def teleopPeriodic(self):
         # Drive

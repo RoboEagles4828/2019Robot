@@ -1,11 +1,11 @@
-import wpilib
+import ctre
 
 class DriveTrain:
 
-    front_left: wpilib.Spark
-    front_right: wpilib.Spark
-    back_left: wpilib.Spark
-    back_right: wpilib.Spark
+    front_left: ctre.TalonSRX
+    front_right: ctre.TalonSRX
+    back_left: ctre.TalonSRX
+    back_right: ctre.TalonSRX
 
     def __init__(self):
         self.speed_left = 0
