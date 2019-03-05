@@ -15,21 +15,21 @@
         "wrist_enc": 2
     },
     "lift": {
-        "lift": {
-            "front": 5,
-            "back": 6
-        },
         "drive": {
             "left": 9,
             "right": 10
         },
-        "limit": {
-            "front": 3,
-            "back": 5
+        "lift": {
+            "front": 5,
+            "back": 6
         },
         "prox": {
             "front": 0,
             "back": 1
+        },
+        "limit": {
+            "front": 3,
+            "back": 5
         }
     }
 }
