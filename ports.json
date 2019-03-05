@@ -1,18 +1,18 @@
 {
+    "drive": {
+        "front_left": 1,
+        "front_right": 3,
+        "back_left": 0,
+        "back_right": 2
+    },
     "arm": {
         "arm_left": 7,
         "arm_right": 8,
         "wrist": 12,
-        "wrist_enc": 2,
         "intake": 11,
         "hatch_in": 4,
-        "hatch_out": 5
-    },
-    "drive": {
-        "front_left": 1,
-        "front_right": 3,
-        "back_left": 2,
-        "back_right": 4
+        "hatch_out": 5,
+        "wrist_enc": 2
     },
     "lift": {
         "lift": {

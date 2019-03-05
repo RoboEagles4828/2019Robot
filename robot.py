@@ -1,59 +1,70 @@
 import json
 import sys
 import logging
+import os
 import magicbot
 import wpilib
 import ctre
-import os
 import navx
 from components.low.lift import Lift
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
 from components.high.autoLift import AutoLift
 
+from components.motionprofiling.arm_mover import ArmMover
+
 class Robot(magicbot.MagicRobot):
 
-    lift: Lift
     drive: DriveTrain
     arm: Arm
     autolift: AutoLift
+    arm_mover: ArmMover
+
+    arm_speed = 0.3
+    wrist_speed = 0.6
+    intake_speed = 1.0
 
     def createObjects(self):
         self.logger = logging.getLogger("Robot")
-        self.joystick = wpilib.Joystick(0)
-        # Timer
-        self.globalTimer = wpilib.Timer()
-        self.globalTimer.start()
         # Load ports and buttons
-        with open("../ports.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/ports.json") as f:
-            ports = json.load(f)
-        with open("../buttons.json" if os.getcwd()[-5:-1] == "test" else sys.path[0] + "/buttons.json") as f:
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "ports.json") as f:
+            self.ports = json.load(f)
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "buttons.json") as f:
             self.buttons = json.load(f)
         # Drive
-        self.front_left = ctre.WPI_TalonSRX(ports["drive"]["front_left"])
-        self.front_right = ctre.WPI_TalonSRX(ports["drive"]["front_right"])
-        self.back_left = ctre.WPI_TalonSRX(ports["drive"]["back_left"])
-        self.back_right = ctre.WPI_TalonSRX(ports["drive"]["back_right"])
+        self.front_left = ctre.WPI_TalonSRX(self.ports["drive"]["front_left"])
+        self.front_right = ctre.WPI_TalonSRX(self.ports["drive"]["front_right"])
+        self.back_left = ctre.WPI_TalonSRX(self.ports["drive"]["back_left"])
+        self.back_right = ctre.WPI_TalonSRX(self.ports["drive"]["back_right"])
         # Arm
-        self.arm_left = ctre.WPI_TalonSRX(ports["arm"]["arm_left"])
-        self.arm_right = ctre.WPI_TalonSRX(ports["arm"]["arm_right"])
-        self.wrist = ctre.WPI_VictorSPX(ports["arm"]["wrist"])
-        self.wrist_enc = wpilib.AnalogInput(ports["arm"]["wrist_enc"])
-        self.intake = ctre.WPI_VictorSPX(ports["arm"]["intake"])
-        self.hatch = wpilib.DoubleSolenoid(ports["arm"]["hatch_in"], ports["arm"]["hatch_out"])
+        self.arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
+        self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
+        self.wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
+        self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
+        self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
+        self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
         # Lift
         self.navx = navx.ahrs.AHRS.create_spi()
-        
-        self.lift_front = ctre.WPI_TalonSRX(ports["lift"]["lift"]["front"])
-        self.lift_back = ctre.WPI_TalonSRX(ports["lift"]["lift"]["back"])
-        self.lift_drive_left = ctre.WPI_VictorSPX(ports["lift"]["drive"]["left"])
-        self.lift_drive_right = ctre.WPI_VictorSPX(ports["lift"]["drive"]["right"])
-        self.lift_limit_front_top = wpilib.DigitalInput(ports["lift"]["limit"]["top_front"])
-        self.lift_limit_front_bottom = wpilib.DigitalInput(ports["lift"]["limit"]["top_back"])
-        self.lift_limit_rear_top = wpilib.DigitalInput(ports["lift"]["limit"]["bot_front"])
-        self.lift_limit_rear_bottom = wpilib.DigitalInput(ports["lift"]["limit"]["bot_back"])
-        self.lift_prox_front = wpilib.DigitalInput(ports["lift"]["prox"]["front"])
-        self.lift_prox_back = wpilib.DigitalInput(ports["lift"]["prox"]["back"])
+        self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["front"])
+        self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["back"])
+        self.lift_drive_left = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["left"])
+        self.lift_drive_right = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["right"])
+        self.lift_top_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
+        self.lift_top_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
+        self.lift_bot_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
+        self.lift_bot_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
+        self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
+        self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
+        # Joystick
+        self.joystick = wpilib.Joystick(0)
+        self.drive_joystick = wpilib.Joystick(1)
+        # Timer
+        self.timer = wpilib.Timer()
+        self.timer.start()
+        # Shuffleboard
+        self.test_tab = wpilib.shuffleboard.Shuffleboard.getTab("Test")
+        # Camera server
+        wpilib.CameraServer.launch()
 
     def teleopInit(self):
         print("Starting Teleop")
@@ -63,10 +74,10 @@ class Robot(magicbot.MagicRobot):
         print(self.navx.getPitch())
         # Drive
         try:
-            self.drive.setSpeedsFromJoystick(self.joystick.getX(), self.joystick.getY(), self.joystick.getTwist())
+            self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist())
         except:
             self.onException()
-        # Lift
+        # Arm
         try:
             if self.joystick.getRawButton(self.buttons["lift"]["drive"]):
                 self.lift.setDriveSpeed(0.5)
@@ -74,36 +85,54 @@ class Robot(magicbot.MagicRobot):
                 self.lift.setLiftSpeed(1.0)
             elif self.joystick.getRawButton(self.buttons["lift"]["down"]):
                 self.lift.setLiftSpeed(-0.8)
+            if self.getButton("arm", "arm_up"):
+                self.arm_mover.disable()
+                self.arm.setArmSpeed(self.arm_speed)
+            elif self.getButton("arm", "arm_down"):
+                self.arm_mover.disable()
+                self.arm.setArmSpeed(-self.arm_speed)
             else:
-                self.lift.disable()
-        except:
-            self.onException()
-        # Arm
-        try:
-            if self.joystick.getRawButton(self.buttons["arm"]["arm_up"]):
-                self.arm.setArmSpeed(0.3)
-            elif self.joystick.getRawButton(self.buttons["arm"]["arm_down"]):
-                self.arm.setArmSpeed(-0.3)
-            else:
-                self.arm.setArmSpeed(0)
+                if not self.arm_mover.isEnabled():
+                    self.arm.setArmSpeed(0)
         except:
             self.onException()
         # Wrist
         try:
-            if self.joystick.getRawButton(self.buttons["arm"]["wrist_up"]):
-                self.arm.setWristSpeed(-0.9)
-            elif self.joystick.getRawButton(self.buttons["arm"]["wrist_down"]):
-                self.arm.setWristSpeed(0.9)
+            if self.getButton("arm", "wrist_up"):
+                self.arm_mover.disable()
+                self.arm.setWristSpeed(self.wrist_speed)
+            elif self.getButton("arm", "wrist_down"):
+                self.arm_mover.disable()
+                self.arm.setWristSpeed(-self.wrist_speed)
             else:
-                self.arm.setWristSpeed(0)
+                if not self.arm_mover.isEnabled():
+                    self.arm.setWristSpeed(0)
+        except:
+            self.onException()
+        # Arm mover
+        try:
+            if self.getButton("arm", "hatch_in"):
+                self.arm_mover.set("hatch_in")
+            elif self.getButton("arm", "hatch_out_1"):
+                self.arm_mover.set("hatch_out_1")
+            elif self.getButton("arm", "hatch_out_2"):
+                self.arm_mover.set("hatch_out_2")
+            elif self.getButton("arm", "ball_in"):
+                self.arm_mover.set("ball_in")
+            elif self.getButton("arm", "ball_out_1"):
+                self.arm_mover.set("ball_out_1")
+            elif self.getButton("arm", "ball_out_2"):
+                self.arm_mover.set("ball_out_2")
         except:
             self.onException()
         # Intake
         try:
-            if self.joystick.getRawButton(self.buttons["arm"]["intake_in"]):
-                self.arm.setIntakeSpeed(-1.0)
-            elif self.joystick.getRawButton(self.buttons["arm"]["intake_out"]):
-                self.arm.setIntakeSpeed(1.0)
+            if self.getButton("arm", "intake_out"):
+                self.arm_mover.disable()
+                self.arm.setIntakeSpeed(self.intake_speed)
+            elif self.getButton("arm", "intake_in"):
+                self.arm_mover.disable()
+                self.arm.setIntakeSpeed(-self.intake_speed)
             else:
                 self.arm.setIntakeSpeed(0)
         except:
@@ -115,12 +144,29 @@ class Robot(magicbot.MagicRobot):
         except:
             self.onException()
                 
+        # Hatch
+        try:
+            self.arm.setHatch(self.getButton("arm", "hatch"))
+        except:
+            self.onException()
+        # Encoders
+        try:
+            if self.getButton("arm", "zero_arm_enc"):
+                self.arm.zeroArmEnc()
+        except:
+            self.onException()
 
     def testInit(self):
         print("Starting Test")
 
     def testPeriodic(self):
-        pass
+        self.drive.setSpeeds(0.5, 0)
+        self.timer.delay(1)
+        self.drive.setSpeeds(0, 0.5)
+        self.timer.delay(1)
+
+    def getButton(self, group, button):
+        return self.joystick.getRawButton(self.buttons[group][button])
 
 logging.basicConfig(level=logging.DEBUG)
 if __name__ == '__main__':

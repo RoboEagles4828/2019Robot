@@ -1,4 +1,3 @@
-import wpilib
 import ctre
 
 class DriveTrain:
