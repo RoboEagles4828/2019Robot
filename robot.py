@@ -6,15 +6,19 @@ import magicbot
 import wpilib
 import ctre
 import navx
-
+from components.low.lift import Lift
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
+from components.high.autoLift import AutoLift
+
 from components.motionprofiling.arm_mover import ArmMover
 
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     arm: Arm
+    lift: Lift
+    autolift: AutoLift
     arm_mover: ArmMover
 
     arm_speed = 0.3
@@ -46,10 +50,10 @@ class Robot(magicbot.MagicRobot):
         self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["back"])
         self.lift_drive_left = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["left"])
         self.lift_drive_right = ctre.WPI_VictorSPX(self.ports["lift"]["drive"]["right"])
-        self.lift_top_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
-        self.lift_top_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
-        self.lift_bot_limit_front = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
-        self.lift_bot_limit_back = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
+        self.lift_limit_front_bottom = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_front"])
+        self.lift_limit_rear_top = wpilib.DigitalInput(self.ports["lift"]["limit"]["top_back"])
+        self.lift_limit_front_top = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_front"])
+        self.lift_limit_rear_bottom = wpilib.DigitalInput(self.ports["lift"]["limit"]["bot_back"])
         self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
         self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
         # Joystick
@@ -68,6 +72,7 @@ class Robot(magicbot.MagicRobot):
         self.navx.reset()
 
     def teleopPeriodic(self):
+        print(self.navx.getPitch())
         # Drive
         try:
             self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist())
@@ -75,6 +80,12 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Arm
         try:
+            if self.joystick.getRawButton(self.buttons["lift"]["drive"]):
+                self.lift.setDriveSpeed(0.5)
+            elif self.joystick.getRawButton(self.buttons["lift"]["up"]):
+                self.lift.setLiftSpeed(1.0)
+            elif self.joystick.getRawButton(self.buttons["lift"]["down"]):
+                self.lift.setLiftSpeed(-0.8)
             if self.getButton("arm", "arm_up"):
                 self.arm_mover.disable()
                 self.arm.setArmSpeed(self.arm_speed)
@@ -127,6 +138,13 @@ class Robot(magicbot.MagicRobot):
                 self.arm.setIntakeSpeed(0)
         except:
             self.onException()
+        #Autolift
+        try:
+            if self.joystick.getRawButton(15): #**CHANGE BUTTON*
+                self.autolift.enable()
+        except:
+            self.onException()
+                
         # Hatch
         try:
             self.arm.setHatch(self.getButton("arm", "hatch"))
