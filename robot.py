@@ -5,13 +5,10 @@ import os
 import magicbot
 import wpilib
 import ctre
-import navx
 
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
 from components.motionprofiling.arm_mover import ArmMover
-from components.low.lift import Lift
-from components.high.lift_mover import LiftMover
 
 class Robot(magicbot.MagicRobot):
 
@@ -31,14 +28,14 @@ class Robot(magicbot.MagicRobot):
         with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "buttons.json") as f:
             self.buttons = json.load(f)
         # Drive
-        self.front_left = ctre.WPI_TalonSRX(self.ports["drive"]["front_left"])
-        self.front_right = ctre.WPI_TalonSRX(self.ports["drive"]["front_right"])
-        self.back_left = ctre.WPI_TalonSRX(self.ports["drive"]["back_left"])
-        self.back_right = ctre.WPI_TalonSRX(self.ports["drive"]["back_right"])
+        self.front_left = wpilib.Spark(self.ports["drive"]["front_left"])
+        self.front_right = wpilib.Spark(self.ports["drive"]["front_right"])
+        self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
+        self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
         # Arm
         self.arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
         self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
-        self.wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
+        self.wrist = wpilib.Talon(self.ports["arm"]["wrist"])
         self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
         self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
         self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
