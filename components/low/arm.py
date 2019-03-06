@@ -10,6 +10,9 @@ class Arm:
     hatch: wpilib.DoubleSolenoid
     wrist_enc: wpilib.AnalogInput
 
+    arm_enc_start = 0
+    wrist_enc_start = 0
+
     def __init__(self):
         self.arm_speed = 0
         self.wrist_speed = 0
@@ -37,13 +40,13 @@ class Arm:
         return self.wrist_speed
 
     def getArmEnc(self):
-        return -self.arm_right.getQuadraturePosition()
+        return self.arm_right.getQuadraturePosition() - self.arm_enc_start
 
     def setArmEnc(self):
         self.arm_right.setQuadraturePosition(self.arm_right.getPulseWidthPosition())
 
     def getWristEnc(self):
-        return self.wrist_enc.getValue()
+        return self.wrist_enc.getValue() - self.wrist_enc_start
 
     def execute(self):
         self.arm_left.set(self.arm_speed)
