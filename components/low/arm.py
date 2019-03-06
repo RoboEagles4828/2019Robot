@@ -39,11 +39,11 @@ class Arm:
     def getArmEnc(self):
         return -self.arm_right.getQuadraturePosition()
 
+    def setArmEnc(self):
+        self.arm_right.setQuadraturePosition(self.arm_right.getPulseWidthPosition())
+
     def getWristEnc(self):
         return self.wrist_enc.getValue()
-
-    def zeroArmEnc(self):
-        self.arm_right.setQuadraturePosition(0)
 
     def execute(self):
         self.arm_left.set(self.arm_speed)

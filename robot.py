@@ -69,6 +69,7 @@ class Robot(magicbot.MagicRobot):
 
     def teleopInit(self):
         print("Starting Teleop")
+        self.arm.setArmEnc()
         self.navx.reset()
 
     def teleopPeriodic(self):
@@ -153,12 +154,6 @@ class Robot(magicbot.MagicRobot):
         try:
             if self.getButton(self.drive_joystick, "lift", "auto"):
                 self.lift_mover.enable()
-        except:
-            self.onException()
-        # Encoders
-        try:
-            if self.getButton(self.joystick, "arm", "zero_arm_enc"):
-                self.arm.zeroArmEnc()
         except:
             self.onException()
 
