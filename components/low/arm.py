@@ -48,5 +48,5 @@ class Arm:
     def execute(self):
         self.arm_left.set(self.arm_speed)
         self.arm_right.set(self.arm_speed)
-        self.wrist.set(-self.wrist_speed)
+        self.wrist.set(self.wrist_speed)
         self.intake.set(self.intake_speed)
