@@ -1,3 +1,6 @@
+import json
+import sys
+import os
 import wpilib
 import ctre
 
@@ -10,10 +13,9 @@ class Arm:
     hatch: wpilib.DoubleSolenoid
     wrist_enc: wpilib.AnalogInput
 
-    arm_enc_start = 0
-    wrist_enc_start = 0
-
     def __init__(self):
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "arm.json") as f:
+            self.config = json.load(f)
         self.arm_speed = 0
         self.wrist_speed = 0
         self.intake_speed = 0
@@ -40,13 +42,13 @@ class Arm:
         return self.wrist_speed
 
     def getArmEnc(self):
-        return self.arm_right.getQuadraturePosition() - self.arm_enc_start
+        return self.arm_right.getQuadraturePosition() - self.config["arm"]["enc_start"]
 
     def setArmEnc(self):
         self.arm_right.setQuadraturePosition(self.arm_right.getPulseWidthPosition())
 
     def getWristEnc(self):
-        return self.wrist_enc.getValue() - self.wrist_enc_start
+        return self.wrist_enc.getValue() - self.config["wrist"]["enc_start"]
 
     def execute(self):
         self.arm_left.set(self.arm_speed)
