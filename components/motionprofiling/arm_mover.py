@@ -1,5 +1,4 @@
 import logging
-import wpilib
 
 from components.low.arm import Arm
 from components.motionprofiling.curve import Curve
@@ -32,12 +31,12 @@ class ArmMover:
     wrist_min_speed = 0.1
     wrist_max_speed = 0.8
     wrist_max_acc = 0.03
-    arm_p = 10 / 1024
-    arm_i = 0 / 1024
-    arm_d = 0 / 1024
-    wrist_p = 10 / 1024
-    wrist_i = 0 / 1024
-    wrist_d = 0 / 1024
+    arm_p = 1.0 / arm_max_pos_speed
+    arm_i = 0.0 / arm_max_pos_speed
+    arm_d = 0.0 / arm_max_pos_speed
+    wrist_p = 1.0 / wrist_max_pos_speed
+    wrist_i = 0.0 / wrist_max_pos_speed
+    wrist_d = 0.0 / wrist_max_pos_speed
 
     def __init__(self, pos="hatch_in"):
         self.logger = logging.getLogger("ArmMover")
@@ -82,28 +81,40 @@ class ArmMover:
             # Set position
             self.pos = pos
 
-    def disable(self):
+    def disableArm(self):
+        self.arm_err_total = 0
+        self.arm_speed = 0
         self.arm_enabled = False
+
+    def disableWrist(self):
+        self.wrist_err_total = 0
+        self.wrist_speed = 0
         self.wrist_enabled = False
+
+    def disable(self):
+        self.disableArm()
+        self.disableWrist()
 
     def isEnabled(self):
         return self.arm_enabled or self.wrist_enabled
 
     def debug(self):
-        logging.info("\n       |  Ctl  |  Pos  |  Set  |  Err  |  Out  |\nArm    | %5r | %5d | %5d | %5d | %5.3f |\nWrist  | %5r | %5d | %5d | %5d | %5.3f |",
-                     self.arm_enabled, self.arm_pos, self.arm_set[self.pos], self.arm_err, self.arm_speed,
-                     self.wrist_enabled, self.wrist_pos, self.wrist_set[self.pos], self.wrist_err, self.wrist_speed
+        logging.info("\n       |  Ctl  |  Pos  |  Set  |  Spd  |  Err  |  Crv  |  Out  |\
+                      \nArm    | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |\
+                      \nWrist  | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |",
+                     self.arm_enabled, self.arm_pos, self.arm_set[self.pos], self.arm_pos_speed, self.arm_err, self.arm_base_speed, self.arm_speed,
+                     self.wrist_enabled, self.wrist_pos, self.wrist_set[self.pos], self.wrist_pos_speed, self.wrist_err, self.wrist_base_speed, self.wrist_speed
                      )
 
     def execute(self):
+        # Get arm position and position speed
+        arm_pos = self.arm.getArmEnc()
+        arm_pos_speed = arm_pos - self.arm_pos
+        # Get arm base speed
+        arm_base_speed = self.arm_curve.getSpeed(arm_pos)
+        # Calculate arm error
+        arm_err = self.arm_base_speed * self.arm_max_pos_speed - arm_pos_speed
         if self.arm_enabled:
-            # Get arm position and position speed
-            arm_pos = self.arm.getArmEnc()
-            arm_pos_speed = arm_pos - self.arm_pos
-            # Get arm base speed
-            arm_base_speed = self.arm_curve.getSpeed(arm_pos)
-            # Calculate arm error
-            arm_err = self.arm_base_speed * self.arm_max_pos_speed - arm_pos_speed
             # Add arm error to total
             self.arm_err_total += arm_err
             # Add arm base speed change and PID to arm speed
@@ -113,25 +124,24 @@ class ArmMover:
                               self.arm_d * (arm_err - self.arm_err)
             if abs(self.arm_speed) > 1:
                 self.arm_speed /= abs(self.arm_speed)
-            # Set arm speed
-            self.arm.setArmSpeed(self.arm_speed)
-            # Set old variables
-            self.arm_pos = arm_pos
-            self.arm_pos_speed = arm_pos_speed
-            self.arm_base_speed = arm_base_speed
-            self.arm_err = arm_err
             # Disable arm if stopped
             if arm_base_speed == 0:
-                self.arm.setArmSpeed(0)
-                self.arm_enabled = False
+                self.disableArm()
+        # Set arm speed
+        self.arm.setArmSpeed(self.arm_speed)
+        # Set old variables
+        self.arm_pos = arm_pos
+        self.arm_pos_speed = arm_pos_speed
+        self.arm_base_speed = arm_base_speed
+        self.arm_err = arm_err
+        # Get wrist position and position speed
+        wrist_pos = self.arm.getWristEnc()
+        wrist_pos_speed = wrist_pos - self.wrist_pos
+        # Get wrist base speed
+        wrist_base_speed = self.wrist_curve.getSpeed(wrist_pos)
+        # Calculate wrist error
+        wrist_err = self.wrist_base_speed * self.wrist_max_pos_speed - wrist_pos_speed
         if self.wrist_enabled:
-            # Get wrist position and position speed
-            wrist_pos = self.arm.getWristEnc()
-            wrist_pos_speed = wrist_pos - self.wrist_pos
-            # Get wrist base speed
-            wrist_base_speed = self.wrist_curve.getSpeed(wrist_pos)
-            # Calculate wrist error
-            wrist_err = self.wrist_base_speed * self.wrist_max_pos_speed - wrist_pos_speed
             # Add wrist error to total
             self.wrist_err_total += wrist_err
             # Add wrist base speed change and PID to wrist speed
@@ -141,14 +151,13 @@ class ArmMover:
                               self.wrist_d * (wrist_err - self.wrist_err)
             if abs(self.wrist_speed) > 1:
                 self.wrist_speed /= abs(self.wrist_speed)
-            # Set wrist speed
-            self.arm.setWristSpeed(self.wrist_speed)
-            # Set old variables
-            self.wrist_pos = wrist_pos
-            self.wrist_pos_speed = wrist_pos_speed
-            self.wrist_base_speed = wrist_base_speed
-            self.wrist_err = wrist_err
             # Disable wrist if stopped
             if wrist_base_speed == 0:
-                self.arm.setWristSpeed(0)
-                self.wrist_enabled = False
+                self.disableWrist()
+        # Set wrist speed
+        self.arm.setWristSpeed(self.wrist_speed)
+        # Set old variables
+        self.wrist_pos = wrist_pos
+        self.wrist_pos_speed = wrist_pos_speed
+        self.wrist_base_speed = wrist_base_speed
+        self.wrist_err = wrist_err

@@ -52,6 +52,7 @@ class Robot(magicbot.MagicRobot):
 
     def teleopInit(self):
         print("Starting Teleop")
+        self.arm.setArmEnc()
 
     def teleopPeriodic(self):
         # Drive
@@ -118,12 +119,6 @@ class Robot(magicbot.MagicRobot):
             self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
         except:
             self.onException()
-        # Encoders
-        try:
-            if self.getButton(self.joystick, "arm", "zero_arm_enc"):
-                self.arm.zeroArmEnc()
-        except:
-            self.onException()
 
     def testInit(self):
         print("Starting Test")
@@ -133,6 +128,9 @@ class Robot(magicbot.MagicRobot):
         self.timer.delay(1)
         self.drive.setSpeeds(0, 0.5)
         self.timer.delay(1)
+
+    def disabledInit(self):
+        self.arm_mover.disable()
 
     def getButton(self, joystick, group, button):
         if self.buttons[group][button] == 13:

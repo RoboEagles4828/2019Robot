@@ -12,7 +12,6 @@
         "ball_out_2": 7,
         "intake_in": 2,
         "intake_out": 1,
-        "hatch": 13,
-        "zero_arm_enc": 14
+        "hatch": 13
     }
 }
