@@ -89,9 +89,11 @@ class ArmMover:
         return self.arm_enabled or self.wrist_enabled
 
     def debug(self):
-        logging.info("\n       |  Ctl  |  Pos  |  Set  |  Err  |  Out  |\nArm    | %5r | %5d | %5d | %5d | %5.3f |\nWrist  | %5r | %5d | %5d | %5d | %5.3f |",
-                     self.arm_enabled, self.arm_pos, self.arm_set[self.pos], self.arm_err, self.arm_speed,
-                     self.wrist_enabled, self.wrist_pos, self.wrist_set[self.pos], self.wrist_err, self.wrist_speed
+        logging.info("\n       |  Ctl  |  Pos  |  Set  |  Spd  |  Err  |  Crv  |  Out  |\
+                      \nArm    | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |\
+                      \nWrist  | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |",
+                     self.arm_enabled, self.arm_pos, self.arm_set[self.pos], self.arm_pos_speed, self.arm_err, self.arm_base_speed, self.arm_speed,
+                     self.wrist_enabled, self.wrist_pos, self.wrist_set[self.pos], self.wrist_pos_speed, self.wrist_err, self.wrist_base_speed, self.wrist_speed
                      )
 
     def execute(self):

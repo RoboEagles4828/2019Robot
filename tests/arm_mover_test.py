@@ -1,4 +1,3 @@
-from time import sleep
 import logging
 
 from components.motionprofiling.arm_mover import ArmMover
@@ -50,7 +49,6 @@ def test_arm_mover(robot):
         assert abs(arm_mover.wrist_speed) <= 1
         # Print debug
         arm_mover.debug()
-        sleep(0.001)
     # Check if the positions were reached
     assert abs(arm_mover.arm_set[arm_mover.pos] - arm_mover.arm_pos) < 20
     assert abs(arm_mover.wrist_set[arm_mover.pos] - arm_mover.wrist_pos) < 20
