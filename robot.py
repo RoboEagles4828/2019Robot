@@ -138,6 +138,10 @@ class Robot(magicbot.MagicRobot):
         self.timer.delay(1)
 
     def getButton(self, joystick, group, button):
+        if self.buttons[group][button] == 13:
+            return joystick.getPOV() == 0
+        if self.buttons[group][button] == 14:
+            return joystick.getPOV() == 180
         return joystick.getRawButton(self.buttons[group][button])
 
 logging.basicConfig(level=logging.DEBUG)
