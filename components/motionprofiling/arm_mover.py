@@ -31,12 +31,12 @@ class ArmMover:
     wrist_min_speed = 0.1
     wrist_max_speed = 0.8
     wrist_max_acc = 0.03
-    arm_p = 10 / 1024
-    arm_i = 0 / 1024
-    arm_d = 0 / 1024
-    wrist_p = 10 / 1024
-    wrist_i = 0 / 1024
-    wrist_d = 0 / 1024
+    arm_p = 1.0 / arm_max_pos_speed
+    arm_i = 0.0 / arm_max_pos_speed
+    arm_d = 0.0 / arm_max_pos_speed
+    wrist_p = 1.0 / wrist_max_pos_speed
+    wrist_i = 0.0 / wrist_max_pos_speed
+    wrist_d = 0.0 / wrist_max_pos_speed
 
     def __init__(self, pos="hatch_in"):
         self.logger = logging.getLogger("ArmMover")
