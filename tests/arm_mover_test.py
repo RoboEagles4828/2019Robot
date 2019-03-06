@@ -50,5 +50,5 @@ def test_arm_mover(robot):
         # Print debug
         arm_mover.debug()
     # Check if the positions were reached
-    assert abs(arm_mover.arm_set[arm_mover.pos] - arm_mover.arm_pos) < 20
-    assert abs(arm_mover.wrist_set[arm_mover.pos] - arm_mover.wrist_pos) < 20
+    assert abs(arm_mover.config["arm"]["set"][arm_mover.pos] - arm_mover.arm_pos) < 10
+    assert abs(arm_mover.config["wrist"]["set"][arm_mover.pos] - arm_mover.wrist_pos) < 10

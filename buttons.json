@@ -15,9 +15,11 @@
         "hatch": 13
     },
     "lift": {
-        "drive": 12,
-        "up": 9,
-        "down": 11,
-        "auto": 1
+        "drive": 11,
+        "front_up": 7,
+        "front_down": 9,
+        "back_up": 8,
+        "back_down": 10,
+        "auto": 12
     }
 }

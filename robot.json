@@ -1,0 +1,11 @@
+{
+    "arm": {
+        "arm_speed": 0.5,
+        "wrist_speed": 0.8,
+        "intake_speed": 1.0
+    },
+    "lift": {
+        "drive_speed": 0.5,
+        "speed": 0.5
+    }
+}

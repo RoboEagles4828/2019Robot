@@ -15,8 +15,6 @@ class Lift:
     lift_limit_front: wpilib.DigitalInput
     lift_limit_back: wpilib.DigitalInput
 
-    back_ratio = 7/8
-
     def __init__(self):
         self.logger = logging.getLogger("Lift")
         self.drive_speed = 0
@@ -38,10 +36,6 @@ class Lift:
 
     def setBackSpeed(self, speed):
         self.back_speed = speed
-
-    def setLiftSpeed(self, speed):
-        self.setFrontSpeed(speed)
-        self.setBackSpeed(self.back_ratio * speed)
 
     def getProxFront(self):
         return not self.lift_prox_front.get()

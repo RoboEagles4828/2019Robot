@@ -21,12 +21,6 @@ class Robot(magicbot.MagicRobot):
     lift: Lift
     lift_mover: LiftMover
 
-    arm_speed = 0.3
-    wrist_speed = 0.6
-    intake_speed = 1.0
-    lift_drive_speed = 0.5
-    lift_speed = 0.5
-
     def createObjects(self):
         self.logger = logging.getLogger("Robot")
         # Load ports and buttons
@@ -34,6 +28,8 @@ class Robot(magicbot.MagicRobot):
             self.ports = json.load(f)
         with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "buttons.json") as f:
             self.buttons = json.load(f)
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "robot.json") as f:
+            self.config = json.load(f)
         # Drive
         self.front_left = ctre.WPI_TalonSRX(self.ports["drive"]["front_left"])
         self.front_right = ctre.WPI_TalonSRX(self.ports["drive"]["front_right"])
@@ -82,10 +78,10 @@ class Robot(magicbot.MagicRobot):
         try:
             if self.getButton(self.joystick, "arm", "arm_up"):
                 self.arm_mover.disable()
-                self.arm.setArmSpeed(self.arm_speed)
+                self.arm.setArmSpeed(self.config["arm"]["arm_speed"])
             elif self.getButton(self.joystick, "arm", "arm_down"):
                 self.arm_mover.disable()
-                self.arm.setArmSpeed(-self.arm_speed)
+                self.arm.setArmSpeed(-self.config["arm"]["arm_speed"])
             else:
                 if not self.arm_mover.isEnabled():
                     self.arm.setArmSpeed(0)
@@ -95,10 +91,10 @@ class Robot(magicbot.MagicRobot):
         try:
             if self.getButton(self.joystick, "arm", "wrist_up"):
                 self.arm_mover.disable()
-                self.arm.setWristSpeed(self.wrist_speed)
+                self.arm.setWristSpeed(self.config["arm"]["wrist_speed"])
             elif self.getButton(self.joystick, "arm", "wrist_down"):
                 self.arm_mover.disable()
-                self.arm.setWristSpeed(-self.wrist_speed)
+                self.arm.setWristSpeed(-self.config["arm"]["wrist_speed"])
             else:
                 if not self.arm_mover.isEnabled():
                     self.arm.setWristSpeed(0)
@@ -124,10 +120,10 @@ class Robot(magicbot.MagicRobot):
         try:
             if self.getButton(self.joystick, "arm", "intake_out"):
                 self.arm_mover.disable()
-                self.arm.setIntakeSpeed(self.intake_speed)
+                self.arm.setIntakeSpeed(self.config["arm"]["intake_speed"])
             elif self.getButton(self.joystick, "arm", "intake_in"):
                 self.arm_mover.disable()
-                self.arm.setIntakeSpeed(-self.intake_speed)
+                self.arm.setIntakeSpeed(-self.config["arm"]["intake_speed"])
             else:
                 self.arm.setIntakeSpeed(0)
         except:
@@ -140,14 +136,19 @@ class Robot(magicbot.MagicRobot):
         # Lift
         try:
             if self.getButton(self.drive_joystick, "lift", "drive"):
-                self.lift.setDriveSpeed(self.lift_drive_speed)
-            elif self.getButton(self.drive_joystick, "lift", "up"):
-                self.lift.setLiftSpeed(self.lift_speed)
-            elif self.getButton(self.drive_joystick, "lift", "down"):
-                self.lift.setLiftSpeed(-self.lift_speed)
+                self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
+            elif self.getButton(self.drive_joystick, "lift", "front_up"):
+                self.lift.setFrontSpeed(self.config["lift"]["speed"])
+            elif self.getButton(self.drive_joystick, "lift", "front_down"):
+                self.lift.setFrontSpeed(-self.config["lift"]["speed"])
+            elif self.getButton(self.drive_joystick, "lift", "back_up"):
+                self.lift.setBackSpeed(self.config["lift"]["speed"])
+            elif self.getButton(self.drive_joystick, "lift", "back_down"):
+                self.lift.setBackSpeed(-self.config["lift"]["speed"])
             else:
                 self.lift.setDriveSpeed(0)
-                self.lift.setLiftSpeed(0)
+                self.lift.setFrontSpeed(0)
+                self.lift.setBackSpeed(0)
         except:
             self.onException()
         # Lift mover
