@@ -1,5 +1,4 @@
 import logging
-import wpilib
 
 from components.low.arm import Arm
 from components.motionprofiling.curve import Curve

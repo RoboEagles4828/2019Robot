@@ -166,6 +166,10 @@ class Robot(magicbot.MagicRobot):
         self.drive.setSpeeds(0, 0.5)
         self.timer.delay(1)
 
+    def disabledInit(self):
+        self.arm_mover.disable()
+        self.lift_mover.disable()
+
     def getButton(self, joystick, group, button):
         if self.buttons[group][button] == 13:
             return joystick.getPOV() == 0

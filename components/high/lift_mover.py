@@ -19,6 +19,7 @@ class LiftMover:
 
     def disable(self):
         self.enabled = False
+        self.status = False
 
     def execute(self):
         if self.enabled and not self.status:
