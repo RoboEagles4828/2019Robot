@@ -24,19 +24,19 @@ class Curve:
         if (self.start < self.end) == self.reverse:
             if pos >= self.start:
                 return -self.min_speed
-            if pos > self.start - (self.max_speed / self.max_acc) and pos > (self.start + self.end) / 2:
-                return -((pos - self.start) * self.max_acc)
-            if pos > self.end + (self.max_speed / self.max_acc):
+            if pos > self.start - ((self.max_speed - self.min_speed) / self.max_acc) and pos > (self.start + self.end) / 2:
+                return -(self.min_speed + (pos - self.start) * self.max_acc)
+            if pos > self.end + ((self.max_speed - self.min_speed) / self.max_acc):
                 return -self.max_speed
             if pos > self.end:
-                return -((self.end - pos) * self.max_acc)
+                return -(self.min_speed + (self.end - pos) * self.max_acc)
             return 0
         if pos <= self.start:
             return self.min_speed
-        if pos < self.start + (self.max_speed / self.max_acc) and pos < (self.start + self.end) / 2:
-            return (pos - self.start) * self.max_acc
-        if pos < self.end - (self.max_speed / self.max_acc):
+        if pos < self.start + ((self.max_speed - self.min_speed) / self.max_acc) and pos < (self.start + self.end) / 2:
+            return self.min_speed + (pos - self.start) * self.max_acc
+        if pos < self.end - ((self.max_speed - self.min_speed) / self.max_acc):
             return self.max_speed
         if pos < self.end:
-            return (self.end - pos) * self.max_acc
+            return self.min_speed + (self.end - pos) * self.max_acc
         return 0

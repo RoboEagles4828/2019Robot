@@ -1,9 +1,4 @@
 {
-    "lift": {
-        "drive": 12,
-        "up": 9,
-        "down": 11
-    },
     "arm": {
         "arm_up": 5,
         "arm_down": 3,
@@ -17,7 +12,14 @@
         "ball_out_2": 7,
         "intake_in": 2,
         "intake_out": 1,
-        "hatch": 13,
-        "zero_arm_enc": 14
+        "hatch": 13
+    },
+    "lift": {
+        "drive": 11,
+        "front_up": 7,
+        "front_down": 9,
+        "back_up": 8,
+        "back_down": 10,
+        "auto": 12
     }
 }

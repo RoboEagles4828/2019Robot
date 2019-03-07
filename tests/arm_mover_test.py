@@ -1,4 +1,3 @@
-from time import sleep
 import logging
 
 from components.motionprofiling.arm_mover import ArmMover
@@ -32,8 +31,8 @@ class FakeArm:
         return self.wrist_pos
 
     def execute(self):
-        self.arm_pos += self.arm_speed * 10
-        self.wrist_pos += self.wrist_speed * 10
+        self.arm_pos += self.arm_speed * 7
+        self.wrist_pos += self.wrist_speed * 7
 
 def test_arm_mover(robot):
     arm = FakeArm()
@@ -42,7 +41,7 @@ def test_arm_mover(robot):
     # Set arm mover position
     arm_mover.set("ball_out_1")
     # Execute loop
-    for _ in range(400):
+    for _ in range(800):
         arm.execute()
         arm_mover.execute()
         # Check speeds
@@ -50,7 +49,6 @@ def test_arm_mover(robot):
         assert abs(arm_mover.wrist_speed) <= 1
         # Print debug
         arm_mover.debug()
-        sleep(0.01)
     # Check if the positions were reached
-    assert abs(arm_mover.arm_set[arm_mover.pos] - arm_mover.arm_pos) < 20
-    assert abs(arm_mover.wrist_set[arm_mover.pos] - arm_mover.wrist_pos) < 20
+    assert abs(arm_mover.config["arm"]["set"][arm_mover.pos] - arm_mover.arm_pos) < 10
+    assert abs(arm_mover.config["wrist"]["set"][arm_mover.pos] - arm_mover.wrist_pos) < 10
