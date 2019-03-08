@@ -72,12 +72,21 @@ class ArmMover:
         return self.arm_enabled or self.wrist_enabled
 
     def debug(self):
-        return ("\n       |  Ctl  |  Pos  |  Set  |  Spd  |  Err  |  Crv  |  Out  |\
-                      \nArm    | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |\
-                      \nWrist  | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |" % (\
-                     self.arm_enabled, self.arm_pos, self.config["arm"]["set"][self.pos], self.arm_pos_speed, self.arm_err, self.arm_base_speed, self.arm_speed,
-                     self.wrist_enabled, self.wrist_pos, self.config["wrist"]["set"][self.pos], self.wrist_pos_speed, self.wrist_err, self.wrist_base_speed, self.wrist_speed
-                     ))
+        return {"Arm Enabled": self.arm_enabled,
+                "Arm Position": self.arm_pos,
+                "Arm Set": self.config["arm"]["set"][self.pos],
+                "Arm Position Speed": self.arm_pos_speed,
+                "Arm Error": self.arm_err,
+                "Arm Base Speed": self.arm_base_speed,
+                "Arm Speed": self.arm_speed,
+                "Wrist Enabled": self.wrist_enabled,
+                "Wrist Position": self.wrist_pos,
+                "Wrist Set": self.config["wrist"]["set"][self.pos],
+                "Wrist Position Speed": self.wrist_pos_speed,
+                "Wrist Error": self.wrist_err,
+                "Wrist Base Speed": self.wrist_base_speed,
+                "Wrist Speed": self.wrist_speed
+                }
 
     def execute(self):
         # Get arm position and position speed

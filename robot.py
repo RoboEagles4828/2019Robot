@@ -149,7 +149,8 @@ class Robot(magicbot.MagicRobot):
                 self.lift_mover.enable()
         except:
             self.onException()
-        wpilib.SmartDashboard.putString("Arm", self.arm_mover.debug())
+        for k, v in self.arm_mover.debug().items():
+            wpilib.SmartDashboard.putString(k, v)
 
     def testInit(self):
         print("Starting Test")
