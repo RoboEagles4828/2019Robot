@@ -150,7 +150,7 @@ class Robot(magicbot.MagicRobot):
         except:
             self.onException()
         for k, v in self.arm_mover.debug().items():
-            wpilib.SmartDashboard.putString(k, v)
+            wpilib.SmartDashboard.putNumber(k, v)
 
     def testInit(self):
         print("Starting Test")
