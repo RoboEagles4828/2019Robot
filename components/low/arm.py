@@ -10,7 +10,7 @@ class Arm:
     arm_right: ctre.WPI_TalonSRX
     wrist: ctre.WPI_VictorSPX
     intake: ctre.WPI_VictorSPX
-    hatch: wpilib.DoubleSolenoid
+    hatch: wpilib.PWM
     wrist_enc: wpilib.AnalogInput
 
     def __init__(self):
@@ -29,11 +29,8 @@ class Arm:
     def setIntakeSpeed(self, speed):
         self.intake_speed = speed
 
-    def setHatch(self, x):
-        if x:
-            self.hatch.set(wpilib.DoubleSolenoid.Value.kForward)
-        else:
-            self.hatch.set(wpilib.DoubleSolenoid.Value.kReverse)
+    def setHatch(self, pos):
+        self.hatch.setRaw(pos)
 
     def getArmSpeed(self):
         return self.arm_speed

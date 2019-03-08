@@ -41,7 +41,7 @@ class Robot(magicbot.MagicRobot):
         self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
         self.wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
         self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
-        self.hatch = wpilib.DoubleSolenoid(self.ports["arm"]["hatch_in"], self.ports["arm"]["hatch_out"])
+        self.hatch = wpilib.PWM(self.ports["arm"]["hatch"])
         self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
         # Lift
         self.navx = navx.ahrs.AHRS.create_spi()
@@ -122,7 +122,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Hatch
         try:
-            self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
+            self.arm.setHatch(255 * self.getButton(self.joystick, "arm", "hatch"))
         except:
             self.onException()
         # Lift
