@@ -41,14 +41,14 @@ def test_arm_mover(robot):
     # Set arm mover position
     arm_mover.set("ball_out_1")
     # Execute loop
-    for _ in range(1000):
+    for _ in range(2000):
         arm.execute()
         arm_mover.execute()
         # Check speeds
         assert abs(arm_mover.arm_speed) <= 1
         assert abs(arm_mover.wrist_speed) <= 1
-        # Print debug
-        logging.info(arm_mover.debug())
+        if arm_mover.arm_base_speed == 0 and arm_mover.wrist_speed == 0:
+            break
     # Check if the positions were reached
     assert abs(arm_mover.config["arm"]["set"][arm_mover.pos] - arm_mover.arm_pos) < 10
     assert abs(arm_mover.config["wrist"]["set"][arm_mover.pos] - arm_mover.wrist_pos) < 10
