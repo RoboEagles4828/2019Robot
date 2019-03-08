@@ -1,5 +1,6 @@
 {
     "arm": {
+        "joy_deadzone": 0.1,
         "enc_start": 0,
         "set": {
             "hatch_in": 0,

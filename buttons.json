@@ -1,17 +1,15 @@
 {
     "arm": {
-        "arm_up": 5,
-        "arm_down": 3,
-        "wrist_up": 6,
-        "wrist_down": 4,
+        "arm_up": 8,
+        "arm_down": 7,
         "hatch_in": 12,
         "hatch_out_1": 10,
         "hatch_out_2": 8,
         "ball_in": 11,
         "ball_out_1": 9,
         "ball_out_2": 7,
-        "intake_in": 2,
-        "intake_out": 1,
-        "hatch": 13
+        "intake_in": 5,
+        "intake_out": 2,
+        "hatch": 1
     }
 }

@@ -73,30 +73,23 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Wrist
         try:
-            if self.getButton(self.joystick, "arm", "wrist_up"):
-                self.arm_mover.disable()
-                self.arm.setWristSpeed(self.config["arm"]["wrist_speed"])
-            elif self.getButton(self.joystick, "arm", "wrist_down"):
-                self.arm_mover.disable()
-                self.arm.setWristSpeed(-self.config["arm"]["wrist_speed"])
-            else:
-                if not self.arm_mover.isEnabled():
-                    self.arm.setWristSpeed(0)
+            self.arm.setWristSpeed(0.6 * (self.joystick.getY() - self.config["arm"]["joy_deadzone"]) 
+                                   if abs(self.joystick.getY()) > self.config["arm"]["joy_deadzone"] else 0)
         except:
             self.onException()
         # Arm mover
         try:
-            if self.getButton(self.joystick, "arm", "hatch_in"):
+            if self.getButton(self.drive_joystick, "arm", "hatch_in"):
                 self.arm_mover.set("hatch_in")
-            elif self.getButton(self.joystick, "arm", "hatch_out_1"):
+            elif self.getButton(self.drive_joystick, "arm", "hatch_out_1"):
                 self.arm_mover.set("hatch_out_1")
-            elif self.getButton(self.joystick, "arm", "hatch_out_2"):
+            elif self.getButton(self.drive_joystick, "arm", "hatch_out_2"):
                 self.arm_mover.set("hatch_out_2")
-            elif self.getButton(self.joystick, "arm", "ball_in"):
+            elif self.getButton(self.drive_joystick, "arm", "ball_in"):
                 self.arm_mover.set("ball_in")
-            elif self.getButton(self.joystick, "arm", "ball_out_1"):
+            elif self.getButton(self.drive_joystick, "arm", "ball_out_1"):
                 self.arm_mover.set("ball_out_1")
-            elif self.getButton(self.joystick, "arm", "ball_out_2"):
+            elif self.getButton(self.drive_joystick, "arm", "ball_out_2"):
                 self.arm_mover.set("ball_out_2")
         except:
             self.onException()
