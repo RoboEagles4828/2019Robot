@@ -1,8 +1,10 @@
 {
     "arm": {
-        "arm_speed": 0.5,
+        "arm_speed": 0.4,
         "wrist_speed": 0.8,
-        "intake_speed": 1.0
+        "intake_out_speed": 1.0,
+        "intake_in_speed": 0.5,
+        "joystick_deadzone": 0.1
     },
     "lift": {
         "drive_speed": 0.5,

@@ -43,17 +43,16 @@ class ArmMover:
         self.wrist_err = 0
 
     def set(self, pos):
-        if self.pos != pos:
-            # Set arm curve
-            self.arm_curve.setStart(self.arm.getArmEnc())
-            self.arm_curve.setEnd(self.config["arm"]["set"][pos])
-            self.arm_enabled = True
-            # Set wrist curve
-            self.wrist_curve.setStart(self.arm.getWristEnc())
-            self.wrist_curve.setEnd(self.config["wrist"]["set"][pos])
-            self.wrist_enabled = True
-            # Set position
-            self.pos = pos
+        # Set arm curve
+        self.arm_curve.setStart(self.arm.getArmEnc())
+        self.arm_curve.setEnd(self.config["arm"]["set"][pos])
+        self.arm_enabled = True
+        # Set wrist curve
+        self.wrist_curve.setStart(self.arm.getWristEnc())
+        self.wrist_curve.setEnd(self.config["wrist"]["set"][pos])
+        self.wrist_enabled = True
+        # Set position
+        self.pos = pos
 
     def disableArm(self):
         self.arm_err_total = 0
@@ -73,12 +72,12 @@ class ArmMover:
         return self.arm_enabled or self.wrist_enabled
 
     def debug(self):
-        logging.info("\n       |  Ctl  |  Pos  |  Set  |  Spd  |  Err  |  Crv  |  Out  |\
+        return ("\n       |  Ctl  |  Pos  |  Set  |  Spd  |  Err  |  Crv  |  Out  |\
                       \nArm    | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |\
-                      \nWrist  | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |",
+                      \nWrist  | %5.0d | %5.0d | %5.0d | %5.2f | %5.2f | %5.2f | %5.2f |" % (\
                      self.arm_enabled, self.arm_pos, self.config["arm"]["set"][self.pos], self.arm_pos_speed, self.arm_err, self.arm_base_speed, self.arm_speed,
                      self.wrist_enabled, self.wrist_pos, self.config["wrist"]["set"][self.pos], self.wrist_pos_speed, self.wrist_err, self.wrist_base_speed, self.wrist_speed
-                     )
+                     ))
 
     def execute(self):
         # Get arm position and position speed
