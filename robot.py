@@ -122,7 +122,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Hatch
         try:
-            self.arm.setHatch(255 * self.getButton(self.joystick, "arm", "hatch"))
+            self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
         except:
             self.onException()
         # Lift
