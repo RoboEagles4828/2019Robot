@@ -42,7 +42,7 @@ class Arm:
         return self.wrist_speed
 
     def getArmEnc(self):
-        return self.arm_right.getQuadraturePosition() - self.config["arm"]["enc_start"]
+        return -(self.arm_right.getQuadraturePosition() - self.config["arm"]["enc_start"])
 
     def setArmEnc(self):
         self.arm_right.setQuadraturePosition(self.arm_right.getPulseWidthPosition())

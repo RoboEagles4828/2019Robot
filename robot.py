@@ -17,6 +17,7 @@ class Robot(magicbot.MagicRobot):
     arm_mover: ArmMover
 
     def createObjects(self):
+        self.control_loop_wait_time = 0.01
         self.logger = logging.getLogger("Robot")
         # Load ports and buttons
         with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "ports.json") as f:
@@ -43,8 +44,6 @@ class Robot(magicbot.MagicRobot):
         # Timer
         self.timer = wpilib.Timer()
         self.timer.start()
-        # Shuffleboard
-        self.test_tab = wpilib.shuffleboard.Shuffleboard.getTab("Test")
         # Camera server
         wpilib.CameraServer.launch()
 
@@ -55,7 +54,7 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         # Drive
         try:
-            self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist() / 2)
+            self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(), self.drive_joystick.getY(), self.drive_joystick.getTwist() / 1.5)
         except:
             self.onException()
         # Arm
@@ -73,8 +72,8 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Wrist
         try:
-            self.arm.setWristSpeed(0.6 * (self.joystick.getY() - self.config["arm"]["joy_deadzone"]) 
-                                   if abs(self.joystick.getY()) > self.config["arm"]["joy_deadzone"] else 0)
+            self.arm.setWristSpeed(self.config["arm"]["wrist_speed"] * self.joystick.getY()
+                                   if abs(self.joystick.getY()) > self.config["arm"]["joystick_deadzone"] else 0)
         except:
             self.onException()
         # Arm mover
@@ -97,10 +96,10 @@ class Robot(magicbot.MagicRobot):
         try:
             if self.getButton(self.joystick, "arm", "intake_out"):
                 self.arm_mover.disable()
-                self.arm.setIntakeSpeed(self.config["arm"]["intake_speed"])
+                self.arm.setIntakeSpeed(self.config["arm"]["intake_out_speed"])
             elif self.getButton(self.joystick, "arm", "intake_in"):
                 self.arm_mover.disable()
-                self.arm.setIntakeSpeed(-self.config["arm"]["intake_speed"])
+                self.arm.setIntakeSpeed(-self.config["arm"]["intake_in_speed"])
             else:
                 self.arm.setIntakeSpeed(0)
         except:
@@ -110,6 +109,7 @@ class Robot(magicbot.MagicRobot):
             self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
         except:
             self.onException()
+        wpilib.SmartDashboard.putString("Arm", self.arm_mover.debug())
 
     def testInit(self):
         print("Starting Test")

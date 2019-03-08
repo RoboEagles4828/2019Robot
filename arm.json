@@ -1,39 +1,38 @@
 {
     "arm": {
-        "joy_deadzone": 0.1,
-        "enc_start": 0,
+        "enc_start": 1400,
         "set": {
             "hatch_in": 0,
-            "hatch_out_1": 520,
-            "hatch_out_2": 2335,
-            "ball_in": 145,
-            "ball_out_1": 1200,
-            "ball_out_2": 2335
+            "hatch_out_1": 0,
+            "hatch_out_2": 0,
+            "ball_in": 0,
+            "ball_out_1": 1190,
+            "ball_out_2": 0
         },
-        "max_pos_speed": 8,
-        "min_speed": 0.1,
-        "max_speed": 0.8,
-        "max_acc": 0.03,
-        "p": 1.0,
+        "max_pos_speed": 50,
+        "min_speed": 0.05,
+        "max_speed": 0.5,
+        "max_acc": 0.001,
+        "p": 0.2,
         "i": 0.0,
-        "d": 0.0
+        "d": 0.1
     },
     "wrist": {
-        "enc_start": 0,
+        "enc_start": 1950,
         "set": {
-            "hatch_in": 2295,
-            "hatch_out_1": 2860,
-            "hatch_out_2": 2205,
-            "ball_in": 2080,
-            "ball_out_1": 1705,
-            "ball_out_2": 1770
+            "hatch_in": 0,
+            "hatch_out_1": 0,
+            "hatch_out_2": 0,
+            "ball_in": 280,
+            "ball_out_1": 0,
+            "ball_out_2": 0
         },
-        "max_pos_speed": 8,
-        "min_speed": 0.1,
-        "max_speed": 0.8,
-        "max_acc": 0.03,
-        "p": 1.0,
+        "max_pos_speed": 50,
+        "min_speed": 0.05,
+        "max_speed": 0.5,
+        "max_acc": 0.001,
+        "p": 0.2,
         "i": 0.0,
-        "d": 0.0
+        "d": 0.1
     }
 }
