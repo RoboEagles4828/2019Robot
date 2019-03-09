@@ -65,11 +65,13 @@ class Lift:
     def execute(self):
         # Get positions
         if self.front_pos == 0 and self.getLimitFront():
-            self.front_pos = self.front_speed / abs(self.front_speed)
+            if self.front_speed != 0:
+                self.front_pos = self.front_speed / abs(self.front_speed)
         if self.front_pos != 0 and not self.getLimitFront():
             self.front_pos = 0
         if self.back_pos == 0 and self.getLimitBack():
-            self.back_pos = self.back_speed / abs(self.back_speed)
+            if self.back_speed != 0:
+                self.back_pos = self.back_speed / abs(self.back_speed)
         if self.back_pos != 0 and not self.getLimitBack():
             self.back_pos = 0
         # Check positions and speeds
