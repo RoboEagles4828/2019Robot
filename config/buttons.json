@@ -18,6 +18,8 @@
         "front_down": 3,
         "back_up": 6,
         "back_down": 4,
+        "up": 13,
+        "down": 14,
         "auto": 12
     }
 }

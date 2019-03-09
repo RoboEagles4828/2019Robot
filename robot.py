@@ -146,6 +146,10 @@ class Robot(magicbot.MagicRobot):
                 self.lift.setBackSpeed(self.config["lift"]["speed"])
             elif self.getButton(self.joystick, "lift", "back_down"):
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
+            elif self.getButton(self.joystick, "lift", "up"):
+                self.lift.setLiftSpeed(self.config["lift"]["speed"])
+            elif self.getButton(self.joystick, "lift", "down"):
+                self.lift.setLiftSpeed(-self.config["lift"]["speed"])
             else:
                 self.lift.setDriveSpeed(0)
                 self.lift.setFrontSpeed(0)
