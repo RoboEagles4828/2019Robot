@@ -22,14 +22,16 @@ class Robot(magicbot.MagicRobot):
     lift_mover: LiftMover
 
     def createObjects(self):
-        self.control_loop_wait_time = 0.01
+        self.use_teleop_in_autonomous = True
+        self.control_loop_wait_time = 0.05
+
         self.logger = logging.getLogger("Robot")
         # Load ports and buttons
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "ports.json") as f:
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/ports.json") as f:
             self.ports = json.load(f)
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "buttons.json") as f:
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/buttons.json") as f:
             self.buttons = json.load(f)
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "robot.json") as f:
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/robot.json") as f:
             self.config = json.load(f)
         # Drive
         self.front_left = ctre.WPI_TalonSRX(self.ports["drive"]["front_left"])
@@ -45,6 +47,7 @@ class Robot(magicbot.MagicRobot):
         self.hatch_2 = wpilib.PWM(self.ports["arm"]["hatch_2"])
         self.hatch_3 = wpilib.PWM(self.ports["arm"]["hatch_3"])
         self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
+        self.arm_limit = wpilib.DigitalInput(self.ports["arm"]["limit"])
         # Lift
         self.navx = navx.ahrs.AHRS.create_spi()
         self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["lift"]["front"])
@@ -63,6 +66,8 @@ class Robot(magicbot.MagicRobot):
         self.timer.start()
         # Camera server
         wpilib.CameraServer.launch()
+
+        wpilib.LiveWindow.disableAllTelemetry()
 
     def teleopInit(self):
         print("Starting Teleop")
@@ -90,7 +95,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Wrist
         try:
-            self.arm.setWristSpeed(self.config["arm"]["wrist_speed"] * self.joystick.getY()
+            self.arm.setWristSpeed(self.config["arm"]["wrist_speed"] * -self.joystick.getY()
                                    if abs(self.joystick.getY()) > self.config["arm"]["joystick_deadzone"] else 0)
         except:
             self.onException()
@@ -125,19 +130,21 @@ class Robot(magicbot.MagicRobot):
         # Hatch
         try:
             self.arm.setHatch(self.getButton(self.joystick, "arm", "hatch"))
+            if self.getButton(self.joystick, "arm", "hatch") and tuple(abs(x) for x in self.drive.getSpeeds()) < (self.config["drive"]["joystick_deadzone"], self.config["drive"]["joystick_deadzone"]):
+                self.drive.setSpeeds(-self.config["drive"]["moveback"], -self.config["drive"]["moveback"])
         except:
             self.onException()
         # Lift
         try:
-            if self.getButton(self.drive_joystick, "lift", "drive"):
+            if self.getButton(self.joystick, "lift", "drive"):
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
-            elif self.getButton(self.drive_joystick, "lift", "front_up"):
+            elif self.getButton(self.joystick, "lift", "front_up"):
                 self.lift.setFrontSpeed(self.config["lift"]["speed"])
-            elif self.getButton(self.drive_joystick, "lift", "front_down"):
+            elif self.getButton(self.joystick, "lift", "front_down"):
                 self.lift.setFrontSpeed(-self.config["lift"]["speed"])
-            elif self.getButton(self.drive_joystick, "lift", "back_up"):
+            elif self.getButton(self.joystick, "lift", "back_up"):
                 self.lift.setBackSpeed(self.config["lift"]["speed"])
-            elif self.getButton(self.drive_joystick, "lift", "back_down"):
+            elif self.getButton(self.joystick, "lift", "back_down"):
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
             else:
                 self.lift.setDriveSpeed(0)
@@ -147,7 +154,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Lift mover
         try:
-            if self.getButton(self.drive_joystick, "lift", "auto"):
+            if self.getButton(self.joystick, "lift", "auto"):
                 self.lift_mover.enable()
         except:
             self.onException()

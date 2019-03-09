@@ -27,7 +27,7 @@ class DriveTrain:
         self.speed_right = speed_right
 
     def getSpeeds(self):
-        return [self.speed_left, self.speed_right]
+        return (self.speed_left, self.speed_right)
 
     def execute(self):
         self.front_left.set(self.speed_left)

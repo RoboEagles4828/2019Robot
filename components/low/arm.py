@@ -14,9 +14,10 @@ class Arm:
     hatch_2: wpilib.PWM
     hatch_3: wpilib.PWM
     wrist_enc: wpilib.AnalogInput
+    arm_limit: wpilib.DigitalInput
 
     def __init__(self):
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "arm.json") as f:
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/arm.json") as f:
             self.config = json.load(f)
         self.arm_speed = 0
         self.wrist_speed = 0
@@ -57,7 +58,10 @@ class Arm:
         self.arm_left.set(self.arm_speed)
         self.arm_right.set(self.arm_speed)
         self.wrist.set(self.wrist_speed)
-        self.intake.set(self.intake_speed)
+        if self.arm_limit.get():
+            self.intake.set(self.intake_speed)
+        else:
+            self.intake.set(0)
         self.hatch_1.setPosition(self.hatch_pos)
         self.hatch_2.setPosition(self.hatch_pos)
         self.hatch_3.setPosition(self.hatch_pos)

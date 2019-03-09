@@ -11,7 +11,7 @@ class ArmMover:
     arm: Arm
 
     def __init__(self, pos="hatch_in"):
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "arm.json") as f:
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/arm.json") as f:
             self.config = json.load(f)
         self.logger = logging.getLogger("ArmMover")
         self.arm_curve = Curve(self.config["arm"]["set"][pos], self.config["arm"]["set"][pos],
@@ -53,6 +53,9 @@ class ArmMover:
         self.wrist_enabled = True
         # Set position
         self.pos = pos
+
+    def autoSetup(self):
+        pass
 
     def disableArm(self):
         self.arm_err_total = 0
