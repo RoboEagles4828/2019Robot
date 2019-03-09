@@ -23,6 +23,10 @@ class Arm:
         self.intake_speed = 0
         self.hatch_pos = 0
 
+        self.hatch_1.setBounds(2, 1.6, 1.5, 1.4, 1)
+        self.hatch_2.setBounds(2, 1.6, 1.5, 1.4, 1)
+        self.hatch_3.setBounds(2, 1.6, 1.5, 1.4, 1)
+
     def setArmSpeed(self, speed):
         self.arm_speed = speed
 
@@ -33,9 +37,6 @@ class Arm:
         self.intake_speed = speed
 
     def setHatch(self, pos):
-        self.hatch_1.setBounds(2, 1.6, 1.5, 1.4, 1)
-        self.hatch_2.setBounds(2, 1.6, 1.5, 1.4, 1)
-        self.hatch_3.setBounds(2, 1.6, 1.5, 1.4, 1)
         self.hatch_pos = pos
 
     def getArmSpeed(self):
