@@ -20,8 +20,8 @@ class Lift:
         self.drive_speed = 0
         self.front_speed = 0
         self.back_speed = 0
-        self.front_pos = 0
-        self.back_pos = 0
+        self.front_pos = -1
+        self.back_pos = -1
         self.navx_start = 0
 
     def disable(self):
@@ -63,10 +63,16 @@ class Lift:
         self.navx_start = self.navx.getPitch()
 
     def execute(self):
-        if self.getLimitFront() and self.front_speed != 0:
+        # Get positions
+        if self.front_pos == 0 and self.getLimitFront():
             self.front_pos = self.front_speed / abs(self.front_speed)
-        if self.getLimitBack() and self.back_speed != 0:
+        if self.front_pos != 0 and not self.getLimitFront():
+            self.front_pos = 0
+        if self.back_pos == 0 and self.getLimitBack():
             self.back_pos = self.back_speed / abs(self.back_speed)
+        if self.back_pos != 0 and not self.getLimitBack():
+            self.back_pos = 0
+        # Check positions and speeds
         if self.front_pos == 1 and self.front_speed > 0:
             self.front_speed = 0
         if self.front_pos == -1 and self.front_speed < 0:
@@ -75,6 +81,7 @@ class Lift:
             self.back_speed = 0
         if self.back_pos == -1 and self.back_speed < 0:
             self.back_speed = 0
+        # Set motors
         self.lift_front.set(self.front_speed)
         self.lift_back.set(self.back_speed)
         self.lift_drive_left.set(self.drive_speed)
