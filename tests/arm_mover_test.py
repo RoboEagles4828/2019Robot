@@ -57,12 +57,12 @@ def test_arm_mover(robot):
         # Add data
         arm_pos_speed.append(arm_mover.arm_pos_speed)
         arm_err.append(arm_mover.arm_err)
-        arm_base_speed.append(arm_mover.arm_base_speed)
-        arm_speed.append(arm_mover.arm_speed)
+        arm_base_speed.append(arm_mover.arm_base_speed * arm_mover.config["arm"]["max_pos_speed"])
+        arm_speed.append(arm_mover.arm_speed * arm_mover.config["arm"]["max_pos_speed"])
         wrist_pos_speed.append(arm_mover.wrist_pos_speed)
         wrist_err.append(arm_mover.wrist_err)
-        wrist_base_speed.append(arm_mover.wrist_base_speed)
-        wrist_speed.append(arm_mover.wrist_speed)
+        wrist_base_speed.append(arm_mover.wrist_base_speed * arm_mover.config["wrist"]["max_pos_speed"])
+        wrist_speed.append(arm_mover.wrist_speed * arm_mover.config["wrist"]["max_pos_speed"])
         # Check speeds
         assert abs(arm_mover.arm_speed) <= 1
         assert abs(arm_mover.wrist_speed) <= 1
