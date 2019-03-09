@@ -67,7 +67,7 @@ class Robot(magicbot.MagicRobot):
     def teleopInit(self):
         print("Starting Teleop")
         self.arm.setArmEnc()
-        self.navx.reset()
+        self.lift.zeroNavx()
 
     def teleopPeriodic(self):
         # Drive
@@ -153,6 +153,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         for k, v in self.arm_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
+        wpilib.SmartDashboard.putNumber("Navx", self.lift.getNavx())
 
     def testInit(self):
         print("Starting Test")

@@ -28,7 +28,8 @@ class LiftMover:
             # Lift up
             if (self.lift.getFrontPos() != 1) or (self.lift.getBackPos() != 1):
                 self.lift.setFrontSpeed(self.config["lift"]["speed"])
-                self.lift.setBackSpeed(self.config["lift"]["speed"] * self.config["lift"]["back_ratio"])
+                self.lift.setBackSpeed(self.config["lift"]["speed"] - self.config["lift"]["p"] * self.lift.getNavx())
+                #self.lift.setBackSpeed(self.config["lift"]["speed"] * self.config["lift"]["back_ratio"])
                 return
             # Drive lift and drivetrain
             if not self.lift.getProxFront():

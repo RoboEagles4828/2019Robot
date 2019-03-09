@@ -22,6 +22,7 @@ class Lift:
         self.back_speed = 0
         self.front_pos = 0
         self.back_pos = 0
+        self.navx_start = 0
 
     def disable(self):
         self.drive_speed = 0
@@ -55,8 +56,11 @@ class Lift:
     def getBackPos(self):
         return self.back_pos
 
-    def debugNavx(self):
-        return self.navx.getPitch()
+    def getNavx(self):
+        return self.navx.getPitch() - self.navx_start
+
+    def zeroNavx(self):
+        self.navx_start = self.navx.getPitch()
 
     def execute(self):
         if self.getLimitFront() and self.front_speed != 0:
