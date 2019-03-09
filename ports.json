@@ -10,7 +10,9 @@
         "arm_right": 8,
         "wrist": 12,
         "intake": 11,
-        "hatch": 5,
+        "hatch_1": 5,
+        "hatch_2": 6,
+        "hatch_3": 7,
         "wrist_enc": 2
     },
     "lift": {

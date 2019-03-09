@@ -41,7 +41,9 @@ class Robot(magicbot.MagicRobot):
         self.arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
         self.wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
         self.intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
-        self.hatch = wpilib.PWM(self.ports["arm"]["hatch"])
+        self.hatch_1 = wpilib.PWM(self.ports["arm"]["hatch_1"])
+        self.hatch_2 = wpilib.PWM(self.ports["arm"]["hatch_2"])
+        self.hatch_3 = wpilib.PWM(self.ports["arm"]["hatch_3"])
         self.wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
         # Lift
         self.navx = navx.ahrs.AHRS.create_spi()
