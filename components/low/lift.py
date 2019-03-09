@@ -1,4 +1,7 @@
 import logging
+import json
+import sys
+import os
 import wpilib
 import ctre
 import navx
@@ -17,6 +20,8 @@ class Lift:
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
+        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/lift.json") as f:
+            self.config = json.load(f)
         self.drive_speed = 0
         self.front_speed = 0
         self.back_speed = 0
@@ -37,6 +42,11 @@ class Lift:
 
     def setBackSpeed(self, speed):
         self.back_speed = speed
+
+    def setLiftSpeed(self, speed):
+        self.setFrontSpeed(speed)
+        self.setBackSpeed(speed - speed / abs(speed) * self.config["lift"]["p"] * self.getNavx())
+        #self.lift.setBackSpeed(speed * self.config["lift"]["back_ratio"])
 
     def getProxFront(self):
         return not self.lift_prox_front.get()
