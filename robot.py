@@ -174,6 +174,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         for k, v in self.arm_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
+        wpilib.SmartDashboard.putNumberArray("Lift Speeds", self.lift.getSpeeds())
         wpilib.SmartDashboard.putNumber("Navx", self.lift.getNavx())
 
     def testInit(self):
