@@ -1,8 +1,8 @@
 {
     "lift": {
         "drive_speed": 0.5,
-        "speed": 0.5,
-        "p": 0.05,
+        "speed": 1.0,
+        "p": 1.0,
         "back_ratio": 0.9
     },
     "drive_speed": 0.1

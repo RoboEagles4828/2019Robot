@@ -136,6 +136,10 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Lift
         try:
+            if self.getButton(self.joystick, "lift", "override"):
+                self.lift.oride(True)
+            else:
+                self.lift.oride(False)
             if self.getButton(self.joystick, "lift", "drive"):
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
             elif self.getButton(self.joystick, "lift", "front_up"):

@@ -20,6 +20,7 @@
         "back_down": 4,
         "up": 13,
         "down": 14,
-        "auto": 12
+        "auto": 12,
+        "override": 9
     }
 }
