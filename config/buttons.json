@@ -20,6 +20,10 @@
         "back_down": 4,
         "up": 13,
         "down": 14,
+        "front_pos_up": 1,
+        "front_pos_down": 2,
+        "back_pos_up": 3,
+        "back_pos_down": 4,
         "auto": 12
     }
 }
