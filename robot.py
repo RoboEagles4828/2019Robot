@@ -136,28 +136,34 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Lift
         try:
-            if self.getButton(self.joystick, "lift", "override"):
-                self.lift.oride(True)
-            else:
-                self.lift.oride(False)
             if self.getButton(self.joystick, "lift", "drive"):
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
-            elif self.getButton(self.joystick, "lift", "front_up"):
+            else:
+                self.lift.setDriveSpeed(0)
+            if self.getButton(self.joystick, "lift", "front_up"):
                 self.lift.setFrontSpeed(self.config["lift"]["speed"])
             elif self.getButton(self.joystick, "lift", "front_down"):
                 self.lift.setFrontSpeed(-self.config["lift"]["speed"])
-            elif self.getButton(self.joystick, "lift", "back_up"):
+            else:
+                self.lift.setFrontSpeed(0)
+            if self.getButton(self.joystick, "lift", "back_up"):
                 self.lift.setBackSpeed(self.config["lift"]["speed"])
             elif self.getButton(self.joystick, "lift", "back_down"):
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
-            elif self.getButton(self.joystick, "lift", "up"):
+            else:
+                self.lift.setBackSpeed(0)
+            if self.getButton(self.joystick, "lift", "up"):
                 self.lift.setLiftSpeed(self.config["lift"]["speed"])
             elif self.getButton(self.joystick, "lift", "down"):
                 self.lift.setLiftSpeed(-self.config["lift"]["speed"])
-            else:
-                self.lift.setDriveSpeed(0)
-                self.lift.setFrontSpeed(0)
-                self.lift.setBackSpeed(0)
+            if self.getButton(self.drive_joystick, "lift", "front_pos_up"):
+                self.lift.setFrontPos(1)
+            elif self.getButton(self.drive_joystick, "lift", "front_pos_down"):
+                self.lift.setFrontPos(-1)
+            if self.getButton(self.drive_joystick, "lift", "back_pos_up"):
+                self.lift.setBackPos(1)
+            elif self.getButton(self.drive_joystick, "lift", "back_pos_down"):
+                self.lift.setBackPos(-1)
         except:
             self.onException()
         # Lift mover
@@ -187,7 +193,11 @@ class Robot(magicbot.MagicRobot):
         if self.buttons[group][button] == 13:
             return joystick.getPOV() == 0
         if self.buttons[group][button] == 14:
-            return joystick.getPOV() == 180
+            return joystick.getPOV() == 90
+        if self.buttons[group][button] == 15:
+                return joystick.getPOV() == 180
+        if self.buttons[group][button] == 16:
+            return joystick.getPOV() == 270
         return joystick.getRawButton(self.buttons[group][button])
 
 logging.basicConfig(level=logging.DEBUG)

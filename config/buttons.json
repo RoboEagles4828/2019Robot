@@ -19,8 +19,11 @@
         "back_up": 6,
         "back_down": 4,
         "up": 13,
-        "down": 14,
-        "auto": 12,
-        "override": 9
+        "down": 15,
+        "front_pos_up": 13,
+        "front_pos_down": 15,
+        "back_pos_up": 14,
+        "back_pos_down": 16,
+        "auto": 12
     }
 }

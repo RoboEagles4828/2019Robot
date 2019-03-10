@@ -45,12 +45,12 @@ class Lift:
         self.back_speed = speed
 
     def setLiftSpeed(self, speed):
-        self.setFrontSpeed(speed)
-        if speed != 0:
-            self.setBackSpeed(min(speed - (speed / abs(speed)) * self.config["lift"]["p"] * self.getNavx(), 1))
+        if (self.getNavx() > 0) != (speed > 0):
+            self.setFrontSpeed(speed)
+            self.setBackSpeed(speed + self.config["lift"]["p"] * self.getNavx())
         else:
-            self.setBackSpeed(0)
-        #self.lift.setBackSpeed(speed * self.config["lift"]["back_ratio"])
+            self.setFrontSpeed(speed - self.config["lift"]["p"] * self.getNavx())
+            self.setBackSpeed(speed)
 
     def getProxFront(self):
         return not self.lift_prox_front.get()
@@ -69,6 +69,12 @@ class Lift:
 
     def getBackPos(self):
         return self.back_pos
+
+    def setFrontPos(self, pos):
+        self.front_pos = pos
+
+    def setBackPos(self, pos):
+        self.back_pos = pos
 
     def getNavx(self):
         return self.navx.getPitch() - self.navx_start
