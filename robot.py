@@ -195,7 +195,7 @@ class Robot(magicbot.MagicRobot):
         if self.buttons[group][button] == 14:
             return joystick.getPOV() == 90
         if self.buttons[group][button] == 15:
-                return joystick.getPOV() == 180
+            return joystick.getPOV() == 180
         if self.buttons[group][button] == 16:
             return joystick.getPOV() == 270
         return joystick.getRawButton(self.buttons[group][button])
