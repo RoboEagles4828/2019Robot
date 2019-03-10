@@ -23,7 +23,7 @@ class Robot(magicbot.MagicRobot):
 
     def createObjects(self):
         self.use_teleop_in_autonomous = True
-        self.control_loop_wait_time = 0.05
+        self.control_loop_wait_time = 0.03
 
         self.logger = logging.getLogger("Robot")
         # Load ports and buttons
@@ -59,8 +59,8 @@ class Robot(magicbot.MagicRobot):
         self.lift_prox_front = wpilib.DigitalInput(self.ports["lift"]["prox"]["front"])
         self.lift_prox_back = wpilib.DigitalInput(self.ports["lift"]["prox"]["back"])
         # Joystick
-        self.joystick = wpilib.Joystick(0)
-        self.drive_joystick = wpilib.Joystick(1)
+        self.joystick = wpilib.Joystick(1)
+        self.drive_joystick = wpilib.Joystick(0)
         # Timer
         self.timer = wpilib.Timer()
         self.timer.start()
@@ -174,6 +174,8 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         for k, v in self.arm_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
+        wpilib.SmartDashboard.putNumber("Lift Front Pos", self.lift.getFrontPos())
+        wpilib.SmartDashboard.putNumber("Lift Back Pos", self.lift.getBackPos())
         wpilib.SmartDashboard.putNumberArray("Lift Speeds", self.lift.getSpeeds())
         wpilib.SmartDashboard.putNumber("Navx", self.lift.getNavx())
 

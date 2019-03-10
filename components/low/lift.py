@@ -44,12 +44,15 @@ class Lift:
         self.back_speed = speed
 
     def setLiftSpeed(self, speed):
-        if (self.getNavx() < 0) != (speed > 0):
-            self.setFrontSpeed(speed)
-            self.setBackSpeed(speed - self.config["lift"]["p"] * self.getNavx())
-        else:
-            self.setFrontSpeed(speed + self.config["lift"]["p"] * self.getNavx())
+        self.setFrontSpeed(speed)
+        if (self.getNavx() > 0) != (speed > 0):
+        #     self.setFrontSpeed(speed)
+        #     self.setBackSpeed(speed + self.config["lift"]["p"] * self.getNavx())
             self.setBackSpeed(speed)
+        else:
+        #     self.setFrontSpeed(speed - self.config["lift"]["p"] * self.getNavx())
+        #     self.setBackSpeed(speed)
+            self.setBackSpeed(speed / 2)
 
     def getProxFront(self):
         return not self.lift_prox_front.get()

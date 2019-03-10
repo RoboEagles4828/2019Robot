@@ -7,8 +7,8 @@
         "joystick_deadzone": 0.1
     },
     "lift": {
-        "drive_speed": 0.5,
-        "speed": 0.5
+        "drive_speed": 1.0,
+        "speed": 1.0
     },
     "drive": {
         "joystick_deadzone": 0.1,
