@@ -1,29 +1,39 @@
 {
-    "arm": {
-        "arm_up": 7,
-        "arm_down": 9,
-        "hatch_in": 12,
-        "hatch_out_1": 10,
-        "hatch_out_2": 8,
-        "ball_in": 11,
-        "ball_out_1": 9,
-        "ball_out_2": 7,
-        "intake_in": 10,
-        "intake_out": 2,
-        "hatch": 1
+    "joystick_0": {
+        "arm": {
+            "hatch_0": 12,
+            "hatch_1": 10,
+            "hatch_2": 8,
+            "ball_0": 11,
+            "ball_1": 9,
+            "ball_2": 7
+        },
+        "lift": {
+            "auto": 13
+        }
     },
-    "lift": {
-        "drive": 11,
-        "front_up": 5,
-        "front_down": 3,
-        "back_up": 6,
-        "back_down": 4,
-        "up": 13,
-        "down": 15,
-        "front_pos_up": 13,
-        "front_pos_down": 15,
-        "back_pos_up": 14,
-        "back_pos_down": 16,
-        "auto": 12
+    "joystick_1": {
+        "arm": {
+            "arm_up": 7,
+            "arm_down": 9,
+            "wrist_up": 0,
+            "wrist_down": 0,
+            "intake_out": 2,
+            "intake_in": 11,
+            "hatch": 1
+        },
+        "lift": {
+            "drive": 12,
+            "front_up": 5,
+            "front_down": 3,
+            "back_up": 6,
+            "back_down": 4,
+            "up": 8,
+            "down": 10,
+            "front_pos_up": 13,
+            "front_pos_down": 15,
+            "back_pos_up": 14,
+            "back_pos_down": 16
+        }
     }
 }

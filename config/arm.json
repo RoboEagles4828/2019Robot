@@ -2,12 +2,12 @@
     "arm": {
         "enc_start": 1400,
         "set": {
-            "hatch_in": 0,
-            "hatch_out_1": 0,
-            "hatch_out_2": 0,
-            "ball_in": 0,
-            "ball_out_1": 1190,
-            "ball_out_2": 0
+            "hatch_0": 0,
+            "hatch_1": 0,
+            "hatch_2": 0,
+            "ball_0": 0,
+            "ball_1": 1190,
+            "ball_2": 0
         },
         "max_pos_speed": 50,
         "min_speed": 0.05,
@@ -20,12 +20,12 @@
     "wrist": {
         "enc_start": 1950,
         "set": {
-            "hatch_in": 0,
-            "hatch_out_1": 0,
-            "hatch_out_2": 0,
-            "ball_in": 280,
-            "ball_out_1": 0,
-            "ball_out_2": 0
+            "hatch_0": 0,
+            "hatch_1": 0,
+            "hatch_2": 0,
+            "ball_0": 280,
+            "ball_1": 0,
+            "ball_2": 0
         },
         "max_pos_speed": 50,
         "min_speed": 0.05,
