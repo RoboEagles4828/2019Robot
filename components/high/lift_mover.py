@@ -5,13 +5,16 @@ import os
 from components.low.drivetrain import DriveTrain
 from components.low.lift import Lift
 
+
 class LiftMover:
 
     drive: DriveTrain
     lift: Lift
 
     def __init__(self):
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/lift.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/lift.json") as f:
             self.config = json.load(f)
         self.enabled = False
         self.status = False
@@ -31,7 +34,8 @@ class LiftMover:
                 return
             # Drive lift and drivetrain
             if not self.lift.getProxFront():
-                self.drive.setSpeeds(self.config["drive_speed"], self.config["drive_speed"])
+                self.drive.setSpeeds(self.config["drive_speed"],
+                                     self.config["drive_speed"])
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
                 return
             # Stop lift and drivetrain
@@ -45,7 +49,8 @@ class LiftMover:
                 return
             # Drive lift and drivetrain
             if not self.lift.getProxBack():
-                self.drive.setSpeeds(self.config["drive_speed"], self.config["drive_speed"])
+                self.drive.setSpeeds(self.config["drive_speed"],
+                                     self.config["drive_speed"])
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
                 return
             # Stop lift and drivetrain

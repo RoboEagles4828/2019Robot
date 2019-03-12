@@ -2,8 +2,8 @@ import json
 import sys
 from pyfrc.physics import drivetrains
 
-class PhysicsEngine:
 
+class PhysicsEngine:
     def __init__(self, physics_controller):
         """
         :param physics_controller: `pyfrc.physics.core.Physics` object
@@ -27,5 +27,6 @@ class PhysicsEngine:
         fl_motor = hal_data["pwm"][self.ports["drive"]["front_left"]]["value"]
         fr_motor = hal_data["pwm"][self.ports["drive"]["front_right"]]["value"]
 
-        speed, rotation_speed = drivetrains.TwoMotorDrivetrain().get_vector(-fl_motor, fr_motor)
+        speed, rotation_speed = drivetrains.TwoMotorDrivetrain().get_vector(
+            -fl_motor, fr_motor)
         self.physics_controller.drive(speed, rotation_speed, tm_diff)

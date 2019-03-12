@@ -6,6 +6,7 @@ import wpilib
 import ctre
 import navx
 
+
 class Lift:
 
     navx: navx.AHRS
@@ -20,7 +21,9 @@ class Lift:
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/lift.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/lift.json") as f:
             self.config = json.load(f)
         self.drive_speed = 0
         self.front_speed = 0
@@ -47,9 +50,11 @@ class Lift:
         if self.config["lift"]["use_navx"] == 1:
             if (self.getNavx() < 0) != (speed > 0):
                 self.setFrontSpeed(speed)
-                self.setBackSpeed(speed - self.config["lift"]["p"] * self.getNavx())
+                self.setBackSpeed(speed -
+                                  self.config["lift"]["p"] * self.getNavx())
             else:
-                self.setFrontSpeed(speed + self.config["lift"]["p"] * self.getNavx())
+                self.setFrontSpeed(speed +
+                                   self.config["lift"]["p"] * self.getNavx())
                 self.setBackSpeed(speed)
         else:
             if speed > 0:

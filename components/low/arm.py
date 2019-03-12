@@ -4,6 +4,7 @@ import os
 import wpilib
 import ctre
 
+
 class Arm:
 
     arm_left: ctre.WPI_TalonSRX
@@ -17,7 +18,9 @@ class Arm:
     arm_limit: wpilib.DigitalInput
 
     def __init__(self):
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/arm.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/arm.json") as f:
             self.config = json.load(f)
         self.arm_speed = 0
         self.wrist_speed = 0
@@ -46,10 +49,12 @@ class Arm:
         return self.wrist_speed
 
     def getArmEnc(self):
-        return -(self.arm_left.getQuadraturePosition() - self.config["arm"]["enc_start"])
+        return -(self.arm_left.getQuadraturePosition() -
+                 self.config["arm"]["enc_start"])
 
     def setArmEnc(self):
-        self.arm_left.setQuadraturePosition(self.arm_left.getPulseWidthPosition())
+        self.arm_left.setQuadraturePosition(
+            self.arm_left.getPulseWidthPosition())
 
     def getWristEnc(self):
         return self.wrist_enc.getValue() - self.config["wrist"]["enc_start"]

@@ -5,8 +5,8 @@ from components.motionprofiling.arm_mover import ArmMover
 
 logging.basicConfig(level=logging.DEBUG)
 
-class FakeArm:
 
+class FakeArm:
     def __init__(self):
         self.arm_pos = 0
         self.arm_speed = 0
@@ -35,6 +35,7 @@ class FakeArm:
         self.arm_pos += self.arm_speed * 30
         self.wrist_pos += self.wrist_speed * 30
 
+
 def test_arm_mover(robot):
     arm = FakeArm()
     arm_mover = ArmMover()
@@ -57,19 +58,24 @@ def test_arm_mover(robot):
         # Add data
         arm_pos_speed.append(arm_mover.arm_pos_speed)
         arm_err.append(arm_mover.arm_err)
-        arm_base_speed.append(arm_mover.arm_base_speed * arm_mover.config["arm"]["max_pos_speed"])
-        arm_speed.append(arm_mover.arm_speed * arm_mover.config["arm"]["max_pos_speed"])
+        arm_base_speed.append(arm_mover.arm_base_speed *
+                              arm_mover.config["arm"]["max_pos_speed"])
+        arm_speed.append(
+            arm_mover.arm_speed * arm_mover.config["arm"]["max_pos_speed"])
         wrist_pos_speed.append(arm_mover.wrist_pos_speed)
         wrist_err.append(arm_mover.wrist_err)
-        wrist_base_speed.append(arm_mover.wrist_base_speed * arm_mover.config["wrist"]["max_pos_speed"])
-        wrist_speed.append(arm_mover.wrist_speed * arm_mover.config["wrist"]["max_pos_speed"])
+        wrist_base_speed.append(arm_mover.wrist_base_speed *
+                                arm_mover.config["wrist"]["max_pos_speed"])
+        wrist_speed.append(
+            arm_mover.wrist_speed * arm_mover.config["wrist"]["max_pos_speed"])
         # Check speeds
         assert abs(arm_mover.arm_speed) <= 1
         assert abs(arm_mover.wrist_speed) <= 1
         if arm_mover.arm_base_speed == 0 and arm_mover.wrist_speed == 0:
             break
     # Check if the positions were reached
-    if abs(arm_mover.config["arm"]["set"][arm_mover.pos] - arm_mover.arm_pos) > 10:
+    if abs(arm_mover.config["arm"]["set"][arm_mover.pos] -
+           arm_mover.arm_pos) > 10:
         plt.plot(arm_pos_speed, label="Arm Pos Speed")
         plt.plot(arm_err, label="Arm Err")
         plt.plot(arm_base_speed, label="Arm Base Speed")
@@ -77,7 +83,8 @@ def test_arm_mover(robot):
         plt.legend()
         plt.show()
         assert False
-    if abs(arm_mover.config["wrist"]["set"][arm_mover.pos] - arm_mover.wrist_pos) > 10:
+    if abs(arm_mover.config["wrist"]["set"][arm_mover.pos] -
+           arm_mover.wrist_pos) > 10:
         plt.plot(wrist_pos_speed, label="Wrist Pos Speed")
         plt.plot(wrist_err, label="Wrist Err")
         plt.plot(wrist_base_speed, label="Wrist Base Speed")

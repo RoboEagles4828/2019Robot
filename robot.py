@@ -29,11 +29,17 @@ class Robot(magicbot.MagicRobot):
         self.control_loop_wait_time = 0.03
         self.use_teleop_in_autonomous = True
         # Load ports, buttons, and config
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/ports.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/ports.json") as f:
             self.ports = json.load(f)
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/buttons.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/buttons.json") as f:
             self.buttons = json.load(f)
-        with open(sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/") + "config/robot.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/robot.json") as f:
             self.config = json.load(f)
         # Drive
         self.drive_front_left = ctre.WPI_TalonSRX(
@@ -45,33 +51,22 @@ class Robot(magicbot.MagicRobot):
         self.drive_back_right = ctre.WPI_TalonSRX(
             self.ports["drive"]["back_right"])
         # Arm
-        self.arm_arm_left = ctre.WPI_TalonSRX(
-            self.ports["arm"]["arm_left"])
-        self.arm_arm_right = ctre.WPI_TalonSRX(
-            self.ports["arm"]["arm_right"])
-        self.arm_wrist = ctre.WPI_VictorSPX(
-            self.ports["arm"]["wrist"])
-        self.arm_intake = ctre.WPI_VictorSPX(
-            self.ports["arm"]["intake"])
-        self.arm_hatch_0 = wpilib.PWM(
-            self.ports["arm"]["hatch_0"])
-        self.arm_hatch_1 = wpilib.PWM(
-            self.ports["arm"]["hatch_1"])
-        self.arm_hatch_2 = wpilib.PWM(
-            self.ports["arm"]["hatch_2"])
-        self.arm_wrist_enc = wpilib.AnalogInput(
-            self.ports["arm"]["wrist_enc"])
-        self.arm_limit = wpilib.DigitalInput(
-            self.ports["arm"]["limit"])
+        self.arm_arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
+        self.arm_arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
+        self.arm_wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
+        self.arm_intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
+        self.arm_hatch_0 = wpilib.PWM(self.ports["arm"]["hatch_0"])
+        self.arm_hatch_1 = wpilib.PWM(self.ports["arm"]["hatch_1"])
+        self.arm_hatch_2 = wpilib.PWM(self.ports["arm"]["hatch_2"])
+        self.arm_wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
+        self.arm_limit = wpilib.DigitalInput(self.ports["arm"]["limit"])
         # Lift
         self.lift_drive_left = ctre.WPI_VictorSPX(
             self.ports["lift"]["drive_left"])
         self.lift_drive_right = ctre.WPI_VictorSPX(
             self.ports["lift"]["drive_right"])
-        self.lift_front = ctre.WPI_TalonSRX(
-            self.ports["lift"]["front"])
-        self.lift_back = ctre.WPI_TalonSRX(
-            self.ports["lift"]["back"])
+        self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["front"])
+        self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["back"])
         self.lift_prox_front = wpilib.DigitalInput(
             self.ports["lift"]["prox_front"])
         self.lift_prox_back = wpilib.DigitalInput(
@@ -100,9 +95,10 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         # Drive
         try:
-            self.drive.setSpeedsFromJoystick(self.drive_joystick.getX(),
-                                             self.drive_joystick.getY(),
-                                             self.config["drive"]["twist_ratio"] * self.drive_joystick.getTwist())
+            self.drive.setSpeedsFromJoystick(
+                self.drive_joystick.getX(), self.drive_joystick.getY(),
+                self.config["drive"]["twist_ratio"] *
+                self.drive_joystick.getTwist())
         except:
             self.onException()
         # Arm
@@ -120,8 +116,10 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Wrist
         try:
-            self.arm.setWristSpeed(self.config["arm"]["wrist_speed"] * -self.joystick.getY()
-                                   if abs(self.joystick.getY()) > self.config["joystick_deadzone"] else 0)
+            self.arm.setWristSpeed(
+                self.config["arm"]["wrist_speed"] *
+                -self.joystick.getY() if abs(self.joystick.getY(
+                )) > self.config["joystick_deadzone"] else 0)
         except:
             self.onException()
         # Arm mover
@@ -155,9 +153,13 @@ class Robot(magicbot.MagicRobot):
         # Hatch
         try:
             self.arm.setHatch(self.getButton("arm", "hatch"))
-            if self.getButton("arm", "hatch") and (abs(x) for x in self.drive.getSpeeds()) < (self.config["joystick_deadzone"], self.config["joystick_deadzone"]):
-                self.drive.setSpeeds(-self.config["drive"]
-                                     ["hatch_speed"], -self.config["drive"]["hatch_speed"])
+            if self.getButton(
+                    "arm", "hatch") and (abs(x)
+                                         for x in self.drive.getSpeeds()) < (
+                                             self.config["joystick_deadzone"],
+                                             self.config["joystick_deadzone"]):
+                self.drive.setSpeeds(-self.config["drive"]["hatch_speed"],
+                                     -self.config["drive"]["hatch_speed"])
         except:
             self.onException()
         # Lift
@@ -235,7 +237,8 @@ class Robot(magicbot.MagicRobot):
             return joystick.getPOV() == 180
         if self.buttons[joystick_name][group][button] == 16:
             return joystick.getPOV() == 270
-        return joystick.getRawButton(self.buttons[joystick_name][group][button])
+        return joystick.getRawButton(
+            self.buttons[joystick_name][group][button])
 
 
 logging.basicConfig(level=logging.DEBUG)
