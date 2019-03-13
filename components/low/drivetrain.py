@@ -12,6 +12,10 @@ class DriveTrain:
         self.speed_left = 0
         self.speed_right = 0
 
+    def setSpeeds(self, speed_left, speed_right):
+        self.speed_left = speed_left
+        self.speed_right = speed_right
+
     def setSpeedsFromJoystick(self, x, y, twist):
         speed_left = (-y + (x if x > 0 else 0) + twist)
         speed_right = (-y - (x if x < 0 else 0) - twist)
@@ -22,10 +26,6 @@ class DriveTrain:
             speed_right /= speed_max
         # Set speeds
         self.setSpeeds(speed_left, speed_right)
-
-    def setSpeeds(self, speed_left, speed_right):
-        self.speed_left = speed_left
-        self.speed_right = speed_right
 
     def getSpeeds(self):
         return (self.speed_left, self.speed_right)

@@ -9,8 +9,8 @@ import navx
 
 from components.low.drivetrain import DriveTrain
 from components.low.arm import Arm
-from components.motionprofiling.arm_mover import ArmMover
 from components.low.lift import Lift
+from components.high.arm_mover import ArmMover
 from components.high.lift_mover import LiftMover
 
 
@@ -89,16 +89,15 @@ class Robot(magicbot.MagicRobot):
         wpilib.LiveWindow.disableAllTelemetry()
 
     def teleopInit(self):
-        self.arm.setArmEnc()
         self.navx.reset()
 
     def teleopPeriodic(self):
         # Drive
         try:
             self.drive.setSpeedsFromJoystick(
-                self.drive_joystick.getX(), self.drive_joystick.getY(),
+                self.joystick_0.getX(), self.joystick_0.getY(),
                 self.config["drive"]["twist_ratio"] *
-                self.drive_joystick.getTwist())
+                self.joystick_0.getTwist())
         except:
             self.onException()
         # Arm
@@ -118,7 +117,7 @@ class Robot(magicbot.MagicRobot):
         try:
             self.arm.setWristSpeed(
                 self.config["arm"]["wrist_speed"] *
-                -self.joystick.getY() if abs(self.joystick.getY(
+                -self.joystick_1.getY() if abs(self.joystick_1.getY(
                 )) > self.config["joystick_deadzone"] else 0)
         except:
             self.onException()
@@ -154,10 +153,11 @@ class Robot(magicbot.MagicRobot):
         try:
             self.arm.setHatch(self.getButton("arm", "hatch"))
             if self.getButton(
-                    "arm", "hatch") and (abs(x)
-                                         for x in self.drive.getSpeeds()) < (
-                                             self.config["joystick_deadzone"],
-                                             self.config["joystick_deadzone"]):
+                    "arm",
+                    "hatch") and tuple(abs(x)
+                                       for x in self.drive.getSpeeds()) < (
+                                           self.config["joystick_deadzone"],
+                                           self.config["joystick_deadzone"]):
                 self.drive.setSpeeds(-self.config["drive"]["hatch_speed"],
                                      -self.config["drive"]["hatch_speed"])
         except:
@@ -181,9 +181,9 @@ class Robot(magicbot.MagicRobot):
             else:
                 self.lift.setBackSpeed(0)
             if self.getButton("lift", "up"):
-                self.lift.setLiftSpeed(self.config["lift"]["speed"])
+                self.lift_mover.set(self.config["lift"]["speed"])
             elif self.getButton("lift", "down"):
-                self.lift.setLiftSpeed(-self.config["lift"]["speed"])
+                self.lift_mover.set(-self.config["lift"]["speed"])
             if self.getButton("lift", "front_pos_up"):
                 self.lift.setFrontPos(1)
             elif self.getButton("lift", "front_pos_down"):
@@ -196,7 +196,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Lift mover
         try:
-            if self.getButton("lift", "auto"):
+            if self.getButton("lift", "enable"):
                 self.lift_mover.enable()
         except:
             self.onException()
@@ -204,7 +204,6 @@ class Robot(magicbot.MagicRobot):
             wpilib.SmartDashboard.putNumber(k, v)
         for k, v in self.lift_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
-        wpilib.SmartDashboard.putNumber("Navx", self.navx.getYaw())
 
     def testInit(self):
         pass
@@ -219,26 +218,32 @@ class Robot(magicbot.MagicRobot):
         self.arm_mover.disable()
         self.lift_mover.disable()
 
+    def getJoystickButton(self, group, button):
+        for j, groups in self.buttons.items():
+            for g, buttons in groups.items():
+                if g != group:
+                    continue
+                for b, v in buttons.items():
+                    if b == button:
+                        if j == "joystick_0":
+                            return (self.joystick_0, v)
+                        if j == "joystick_1":
+                            return (self.joystick_1, v)
+        return (None, None)
+
     def getButton(self, group, button):
-        for j, g, b in self.buttons:
-            if g == group and b == button:
-                joystick_name = j
-        if joystick_name == "joystick_0":
-            joystick = self.joystick_0
-        elif joystick_name == "joystick_1":
-            joystick = self.joystick_1
-        else:
-            return -1
-        if self.buttons[joystick_name][group][button] == 13:
+        joystick, value = self.getJoystickButton(group, button)
+        if joystick is None:
+            return 0
+        if value == 13:
             return joystick.getPOV() == 0
-        if self.buttons[joystick_name][group][button] == 14:
+        if value == 14:
             return joystick.getPOV() == 90
-        if self.buttons[joystick_name][group][button] == 15:
+        if value == 15:
             return joystick.getPOV() == 180
-        if self.buttons[joystick_name][group][button] == 16:
+        if value == 16:
             return joystick.getPOV() == 270
-        return joystick.getRawButton(
-            self.buttons[joystick_name][group][button])
+        return joystick.getRawButton(value)
 
 
 logging.basicConfig(level=logging.DEBUG)

@@ -1,7 +1,7 @@
 import logging
 import matplotlib.pyplot as plt
 
-from components.motionprofiling.arm_mover import ArmMover
+from components.high.arm_mover import ArmMover
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -50,7 +50,7 @@ def test_arm_mover(robot):
     wrist_base_speed = []
     wrist_speed = []
     # Set arm mover position
-    arm_mover.set("ball_out_1")
+    arm_mover.set("ball_1")
     # Execute loop
     for _ in range(2000):
         arm.execute()

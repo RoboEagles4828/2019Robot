@@ -11,7 +11,7 @@ class ArmMover:
 
     arm: Arm
 
-    def __init__(self, pos="hatch_in"):
+    def __init__(self, pos="hatch_0"):
         with open(sys.path[0] +
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
                   "config/arm.json") as f:
@@ -110,13 +110,12 @@ class ArmMover:
             # Add arm error to total
             self.arm_err_total += arm_err
             # Add arm base speed change and PID to arm speed
-            self.arm_speed += arm_base_speed - self.arm_base_speed + self.config[
-                "arm"]["p"] / self.config["arm"][
-                    "max_pos_speed"] * arm_err + self.config["arm"][
-                        "i"] / self.config["arm"][
-                            "max_pos_speed"] * self.arm_err_total + self.config[
-                                "arm"]["d"] / self.config["arm"][
-                                    "max_pos_speed"] * (arm_err - self.arm_err)
+            self.arm_speed += (
+                arm_base_speed - self.arm_base_speed + self.config["arm"]["p"]
+                / self.config["arm"]["max_pos_speed"] * arm_err +
+                self.config["arm"]["i"] / self.config["arm"]["max_pos_speed"] *
+                self.arm_err_total + self.config["arm"]["d"] /
+                self.config["arm"]["max_pos_speed"] * (arm_err - self.arm_err))
             if abs(self.arm_speed) > 1:
                 self.arm_speed /= abs(self.arm_speed)
             # Disable arm if stopped
@@ -141,14 +140,15 @@ class ArmMover:
             # Add wrist error to total
             self.wrist_err_total += wrist_err
             # Add wrist base speed change and PID to wrist speed
-            self.wrist_speed += wrist_base_speed - self.wrist_base_speed + self.config[
-                "wrist"]["p"] / self.config["wrist"][
-                    "max_pos_speed"] * wrist_err + self.config["wrist"][
-                        "i"] / self.config["wrist"][
-                            "max_pos_speed"] * self.wrist_err_total + self.config[
-                                "wrist"]["d"] / self.config["wrist"][
-                                    "max_pos_speed"] * (
-                                        wrist_err - self.wrist_err)
+            self.wrist_speed += (
+                wrist_base_speed - self.wrist_base_speed +
+                self.config["wrist"]["p"] /
+                self.config["wrist"]["max_pos_speed"] * wrist_err +
+                self.config["wrist"]["i"] /
+                self.config["wrist"]["max_pos_speed"] * self.wrist_err_total +
+                self.config["wrist"]["d"] /
+                self.config["wrist"]["max_pos_speed"] *
+                (wrist_err - self.wrist_err))
             if abs(self.wrist_speed) > 1:
                 self.wrist_speed /= abs(self.wrist_speed)
             # Disable wrist if stopped

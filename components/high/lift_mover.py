@@ -26,11 +26,46 @@ class LiftMover:
         self.enabled = False
         self.status = False
 
+    def set(self, speed):
+        if self.config["lift"]["use_navx"] == 1:
+            if (self.lift.getNavx() < 0) != (speed > 0):
+                self.lift.setFrontSpeed(speed)
+                self.lift.setBackSpeed(
+                    speed - self.config["lift"]["p"] * self.lift.getNavx())
+            else:
+                self.lift.setFrontSpeed(
+                    speed + self.config["lift"]["p"] * self.lift.getNavx())
+                self.lift.setBackSpeed(speed)
+        else:
+            if speed > 0:
+                self.lift.setFrontSpeed(speed)
+                self.lift.setBackSpeed(self.config["lift"]["up_ratio"] * speed)
+            else:
+                self.lift.setFrontSpeed(
+                    self.config["lift"]["down_ratio"] * speed)
+                self.lift.setBackSpeed(speed)
+
+    def debug(self):
+        return {
+            "Lift Drive Speed": self.lift.getDriveSpeed(),
+            "Lift Front Speed": self.lift.getFrontSpeed(),
+            "Lift Back Speed": self.lift.getBackSpeed(),
+            "Lift Prox Front": self.lift.getProxFront(),
+            "Lift Prox Back": self.lift.getProxBack(),
+            "Lift Limit Front": self.lift.getLimitFront(),
+            "Lift Limit Back": self.lift.getLimitBack(),
+            "Lift Front Position": self.lift.getFrontPos(),
+            "Lift Back Position": self.lift.getBackPos(),
+            "Lift Navx": self.lift.getNavx(),
+            "Lift Enabled": self.enabled,
+            "Lift Status": self.status
+        }
+
     def execute(self):
         if self.enabled and not self.status:
             # Lift up
             if (self.lift.getFrontPos() != 1) or (self.lift.getBackPos() != 1):
-                self.lift.setLiftSpeed(self.config["lift"]["speed"])
+                self.set(self.config["lift"]["speed"])
                 return
             # Drive lift and drivetrain
             if not self.lift.getProxFront():
@@ -62,3 +97,5 @@ class LiftMover:
                 return
             self.enabled = False
             self.status = False
+        else:
+            self.lift.disable()

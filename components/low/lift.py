@@ -1,7 +1,4 @@
 import logging
-import json
-import sys
-import os
 import wpilib
 import ctre
 import navx
@@ -9,7 +6,6 @@ import navx
 
 class Lift:
 
-    navx: navx.AHRS
     lift_front: ctre.WPI_TalonSRX
     lift_back: ctre.WPI_TalonSRX
     lift_drive_left: ctre.WPI_VictorSPX
@@ -18,13 +14,10 @@ class Lift:
     lift_prox_back: wpilib.DigitalInput
     lift_limit_front: wpilib.DigitalInput
     lift_limit_back: wpilib.DigitalInput
+    navx: navx.AHRS
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
-        with open(sys.path[0] +
-                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
-                  "config/lift.json") as f:
-            self.config = json.load(f)
         self.drive_speed = 0
         self.front_speed = 0
         self.back_speed = 0
@@ -46,23 +39,14 @@ class Lift:
     def setBackSpeed(self, speed):
         self.back_speed = speed
 
-    def setLiftSpeed(self, speed):
-        if self.config["lift"]["use_navx"] == 1:
-            if (self.getNavx() < 0) != (speed > 0):
-                self.setFrontSpeed(speed)
-                self.setBackSpeed(speed -
-                                  self.config["lift"]["p"] * self.getNavx())
-            else:
-                self.setFrontSpeed(speed +
-                                   self.config["lift"]["p"] * self.getNavx())
-                self.setBackSpeed(speed)
-        else:
-            if speed > 0:
-                self.setFrontSpeed(speed)
-                self.setBackSpeed(self.config["lift"]["back_ratio"] * speed)
-            else:
-                self.setFrontSpeed(self.config["lift"]["front_ratio"] * speed)
-                self.setBackSpeed(speed)
+    def getDriveSpeed(self):
+        return self.drive_speed
+
+    def getFrontSpeed(self):
+        return self.front_speed
+
+    def getBackSpeed(self):
+        return self.back_speed
 
     def getProxFront(self):
         return not self.lift_prox_front.get()
@@ -93,9 +77,6 @@ class Lift:
 
     def zeroNavx(self):
         self.navx_start = self.navx.getPitch()
-
-    def getSpeeds(self):
-        return (self.front_speed, self.back_speed)
 
     def execute(self):
         # Get positions
