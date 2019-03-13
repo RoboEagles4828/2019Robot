@@ -9,7 +9,7 @@
             "ball_2": 7
         },
         "lift": {
-            "auto": 13
+            "enable": 13
         }
     },
     "joystick_1": {
