@@ -234,7 +234,8 @@ class Robot(magicbot.MagicRobot):
     def getButton(self, group, button):
         joystick, value = self.getJoystickButton(group, button)
         if joystick is None:
-            return 0
+            raise KeyError(
+                "Button '%s' in group '%s' does not exist" % (button, group))
         if value == 13:
             return joystick.getPOV() == 0
         if value == 14:
