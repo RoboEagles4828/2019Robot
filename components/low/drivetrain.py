@@ -1,5 +1,6 @@
 import wpilib
 
+
 class DriveTrain:
 
     front_left: wpilib.Spark
@@ -10,6 +11,10 @@ class DriveTrain:
     def __init__(self):
         self.speed_left = 0
         self.speed_right = 0
+
+    def setSpeeds(self, speed_left, speed_right):
+        self.speed_left = speed_left
+        self.speed_right = speed_right
 
     def setSpeedsFromJoystick(self, x, y, twist):
         speed_left = (-y + (x if x > 0 else 0) + twist)
@@ -22,12 +27,8 @@ class DriveTrain:
         # Set speeds
         self.setSpeeds(speed_left, speed_right)
 
-    def setSpeeds(self, speed_left, speed_right):
-        self.speed_left = speed_left
-        self.speed_right = speed_right
-
     def getSpeeds(self):
-        return [self.speed_left, self.speed_right]
+        return (self.speed_left, self.speed_right)
 
     def execute(self):
         self.front_left.set(self.speed_left)

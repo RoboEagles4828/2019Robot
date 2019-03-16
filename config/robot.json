@@ -1,0 +1,7 @@
+{
+    "drive": {
+        "twist_ratio": 0.8,
+        "hatch_speed": 0.05
+    },
+    "joystick_deadzone": 0.1
+}
