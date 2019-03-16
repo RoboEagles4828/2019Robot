@@ -48,7 +48,7 @@ class Lift:
         return self.back_speed
 
     def getProxFront(self):
-        return not self.lift_prox_front.get()
+        return self.lift_prox_front.get()
 
     def getProxBack(self):
         return not self.lift_prox_back.get()

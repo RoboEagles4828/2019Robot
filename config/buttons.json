@@ -6,7 +6,7 @@
     },
     "joystick_1": {
         "lift": {
-            "drive": 12,
+            "drive": 11,
             "front_up": 5,
             "front_down": 3,
             "back_up": 6,

@@ -89,24 +89,34 @@ class Robot(magicbot.MagicRobot):
         # Lift
         try:
             if self.getButton("lift", "drive"):
+                self.lift_mover.disable()
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
             else:
-                self.lift.setDriveSpeed(0)
+                if not self.lift_mover.isEnabled():
+                    self.lift.setDriveSpeed(0)
             if self.getButton("lift", "front_up"):
+                self.lift_mover.disable()
                 self.lift.setFrontSpeed(self.config["lift"]["speed"])
             elif self.getButton("lift", "front_down"):
+                self.lift_mover.disable()
                 self.lift.setFrontSpeed(-self.config["lift"]["speed"])
             else:
-                self.lift.setFrontSpeed(0)
+                if not self.lift_mover.isEnabled():
+                    self.lift.setFrontSpeed(0)
             if self.getButton("lift", "back_up"):
+                self.lift_mover.disable()
                 self.lift.setBackSpeed(self.config["lift"]["speed"])
             elif self.getButton("lift", "back_down"):
+                self.lift_mover.disable()
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
             else:
-                self.lift.setBackSpeed(0)
+                if not self.lift_mover.isEnabled():
+                    self.lift.setBackSpeed(0)
             if self.getButton("lift", "up"):
+                self.lift_mover.disable()
                 self.lift_mover.set(self.config["lift"]["speed"])
             elif self.getButton("lift", "down"):
+                self.lift_mover.disable()
                 self.lift_mover.set(-self.config["lift"]["speed"])
             if self.getButton("lift", "front_pos_up"):
                 self.lift.setFrontPos(1)

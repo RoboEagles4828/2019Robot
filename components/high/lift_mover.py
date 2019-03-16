@@ -26,6 +26,9 @@ class LiftMover:
         self.enabled = False
         self.status = False
 
+    def isEnabled(self):
+        return self.enabled
+
     def set(self, speed):
         if self.config["lift"]["use_navx"] == 1:
             if (self.lift.getNavx() < 0) != (speed > 0):
@@ -73,7 +76,7 @@ class LiftMover:
                                      self.config["drive_speed"])
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
                 return
-            # Stop lift and drivetrain
+            # Stop lift drive and drivetrain
             self.drive.setSpeeds(0, 0)
             self.lift.setDriveSpeed(0)
             self.status = True
@@ -88,13 +91,14 @@ class LiftMover:
                                      self.config["drive_speed"])
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
                 return
-            # Stop lift and drivetrain
-            self.drive.setSpeeds(0, 0)
+            # Stop lift drive
             self.lift.setDriveSpeed(0)
             # Lift back up
             if self.lift.getBackPos() != -1:
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
                 return
+            # Stop drivetrain
+            self.drive.setSpeeds(0, 0)
             self.enabled = False
             self.status = False
         else:
