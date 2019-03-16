@@ -3,12 +3,6 @@
         "twist_ratio": 0.8,
         "hatch_speed": 0.05
     },
-    "arm": {
-        "arm_speed": 0.4,
-        "wrist_speed": 0.4,
-        "intake_out_speed": 1.0,
-        "intake_in_speed": 0.5
-    },
     "lift": {
         "drive_speed": 1.0,
         "speed": 1.0

@@ -8,17 +8,13 @@ import ctre
 import navx
 
 from components.low.drivetrain import DriveTrain
-from components.low.arm import Arm
 from components.low.lift import Lift
-from components.high.arm_mover import ArmMover
 from components.high.lift_mover import LiftMover
 
 
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
-    arm: Arm
-    arm_mover: ArmMover
     lift: Lift
     lift_mover: LiftMover
 
@@ -50,16 +46,6 @@ class Robot(magicbot.MagicRobot):
             self.ports["drive"]["back_left"])
         self.drive_back_right = ctre.WPI_TalonSRX(
             self.ports["drive"]["back_right"])
-        # Arm
-        self.arm_arm_left = ctre.WPI_TalonSRX(self.ports["arm"]["arm_left"])
-        self.arm_arm_right = ctre.WPI_TalonSRX(self.ports["arm"]["arm_right"])
-        self.arm_wrist = ctre.WPI_VictorSPX(self.ports["arm"]["wrist"])
-        self.arm_intake = ctre.WPI_VictorSPX(self.ports["arm"]["intake"])
-        self.arm_hatch_0 = wpilib.PWM(self.ports["arm"]["hatch_0"])
-        self.arm_hatch_1 = wpilib.PWM(self.ports["arm"]["hatch_1"])
-        self.arm_hatch_2 = wpilib.PWM(self.ports["arm"]["hatch_2"])
-        self.arm_wrist_enc = wpilib.AnalogInput(self.ports["arm"]["wrist_enc"])
-        self.arm_limit = wpilib.DigitalInput(self.ports["arm"]["limit"])
         # Lift
         self.lift_drive_left = ctre.WPI_VictorSPX(
             self.ports["lift"]["drive_left"])
@@ -100,68 +86,6 @@ class Robot(magicbot.MagicRobot):
                 self.joystick_0.getTwist())
         except:
             self.onException()
-        # Arm
-        try:
-            if self.getButton("arm", "arm_up"):
-                self.arm_mover.disable()
-                self.arm.setArmSpeed(self.config["arm"]["arm_speed"])
-            elif self.getButton("arm", "arm_down"):
-                self.arm_mover.disable()
-                self.arm.setArmSpeed(-self.config["arm"]["arm_speed"])
-            else:
-                if not self.arm_mover.isEnabled():
-                    self.arm.setArmSpeed(0)
-        except:
-            self.onException()
-        # Wrist
-        try:
-            self.arm.setWristSpeed(
-                self.config["arm"]["wrist_speed"] *
-                -self.joystick_1.getY() if abs(self.joystick_1.getY(
-                )) > self.config["joystick_deadzone"] else 0)
-        except:
-            self.onException()
-        # Arm mover
-        try:
-            if self.getButton("arm", "hatch_0"):
-                self.arm_mover.set("hatch_0")
-            elif self.getButton("arm", "hatch_1"):
-                self.arm_mover.set("hatch_1")
-            elif self.getButton("arm", "hatch_2"):
-                self.arm_mover.set("hatch_2")
-            elif self.getButton("arm", "ball_0"):
-                self.arm_mover.set("ball_0")
-            elif self.getButton("arm", "ball_1"):
-                self.arm_mover.set("ball_1")
-            elif self.getButton("arm", "ball_2"):
-                self.arm_mover.set("ball_2")
-        except:
-            self.onException()
-        # Intake
-        try:
-            if self.getButton("arm", "intake_out"):
-                self.arm_mover.disable()
-                self.arm.setIntakeSpeed(self.config["arm"]["intake_out_speed"])
-            elif self.getButton("arm", "intake_in"):
-                self.arm_mover.disable()
-                self.arm.setIntakeSpeed(-self.config["arm"]["intake_in_speed"])
-            else:
-                self.arm.setIntakeSpeed(0)
-        except:
-            self.onException()
-        # Hatch
-        try:
-            self.arm.setHatch(self.getButton("arm", "hatch"))
-            if self.getButton(
-                    "arm",
-                    "hatch") and tuple(abs(x)
-                                       for x in self.drive.getSpeeds()) < (
-                                           self.config["joystick_deadzone"],
-                                           self.config["joystick_deadzone"]):
-                self.drive.setSpeeds(-self.config["drive"]["hatch_speed"],
-                                     -self.config["drive"]["hatch_speed"])
-        except:
-            self.onException()
         # Lift
         try:
             if self.getButton("lift", "drive"):
@@ -200,8 +124,6 @@ class Robot(magicbot.MagicRobot):
                 self.lift_mover.enable()
         except:
             self.onException()
-        for k, v in self.arm_mover.debug().items():
-            wpilib.SmartDashboard.putNumber(k, v)
         for k, v in self.lift_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
 
@@ -215,7 +137,6 @@ class Robot(magicbot.MagicRobot):
         self.timer.delay(1)
 
     def disabledInit(self):
-        self.arm_mover.disable()
         self.lift_mover.disable()
 
     def getJoystickButton(self, group, button):

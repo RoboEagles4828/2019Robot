@@ -1,27 +1,10 @@
 {
     "joystick_0": {
-        "arm": {
-            "hatch_0": 12,
-            "hatch_1": 10,
-            "hatch_2": 8,
-            "ball_0": 11,
-            "ball_1": 9,
-            "ball_2": 7
-        },
         "lift": {
             "enable": 13
         }
     },
     "joystick_1": {
-        "arm": {
-            "arm_up": 7,
-            "arm_down": 9,
-            "wrist_up": 0,
-            "wrist_down": 0,
-            "intake_out": 2,
-            "intake_in": 11,
-            "hatch": 1
-        },
         "lift": {
             "drive": 12,
             "front_up": 5,
