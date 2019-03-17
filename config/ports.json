@@ -5,6 +5,6 @@
         "back_left": 2,
         "back_right": 4
     },
-    "solenoid_out": 4,
-    "solenoid_in": 5
+    "solenoid_out": 5,
+    "solenoid_in": 4
 }
