@@ -1,5 +1,8 @@
 {
     "joystick_0": {
+        "solenoid": {
+            "out": 1
+        }
     },
     "joystick_1": {
     }

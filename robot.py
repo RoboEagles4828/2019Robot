@@ -37,6 +37,9 @@ class Robot(magicbot.MagicRobot):
         self.front_right = wpilib.Spark(self.ports["drive"]["front_right"])
         self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
         self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
+        # Solenoid
+        self.solenoid = wpilib.DoubleSolenoid(self.ports["solenoid_out"],
+                                              self.ports["solenoid_in"])
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
         # Joysticks
@@ -60,6 +63,14 @@ class Robot(magicbot.MagicRobot):
                 self.joystick_0.getX(), self.joystick_0.getY(),
                 self.config["drive"]["twist_ratio"] *
                 self.joystick_0.getTwist())
+        except:
+            self.onException()
+        # Solenoid
+        try:
+            self.solenoid.set(
+                wpilib.DoubleSolenoid.Value.kForward if self.
+                getButton("solenoid", "out"
+                          ) else wpilib.DoubleSolenoid.Value.kReverse)
         except:
             self.onException()
 
