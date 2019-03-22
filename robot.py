@@ -80,10 +80,19 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         # Drive
         try:
-            self.drive.setSpeedsFromJoystick(
-                self.joystick_0.getX(), self.joystick_0.getY(),
-                self.config["drive"]["twist_ratio"] *
-                self.joystick_0.getTwist())
+            if (abs(self.joystick_0.getX()), abs(self.joystick_0.getY()),
+                    abs(self.joystick_0.getTwist())) < (
+                        self.config["joystick_deadzone"],
+                        self.config["joystick_deadzone"],
+                        self.config["joystick_deadzone"]):
+                if not self.lift_mover.isEnabled():
+                    self.drive.setSpeeds(0, 0)
+            else:
+                self.lift_mover.disable()
+                self.drive.setSpeedsFromJoystick(
+                    self.joystick_0.getX(), self.joystick_0.getY(),
+                    self.config["drive"]["twist_ratio"] *
+                    self.joystick_0.getTwist())
         except:
             self.onException()
         # Lift
