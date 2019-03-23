@@ -14,5 +14,13 @@
         "prox_back": 1,
         "limit_front": 3,
         "limit_back": 5
+    },
+    "bucket": {
+        "piston_up": 0,
+        "piston_down": 1
+    },
+    "hatch": {
+        "servo_0": 12,
+        "servo_1": 11
     }
 }

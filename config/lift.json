@@ -7,5 +7,5 @@
         "up_ratio": 0.8,
         "down_ratio": 0.8
     },
-    "drive_speed": 0.75
+    "drive_speed": 0.5
 }
