@@ -1,26 +1,23 @@
 {
     "joystick_0": {
-        "lift": {
-            "enable": 13
+        "hatch": {
+            "set": 1
         }
     },
     "joystick_1": {
         "lift": {
-            "drive": 11,
+            "drive": 12,
             "front_up": 5,
             "front_down": 3,
             "back_up": 6,
             "back_down": 4,
-            "up": 8,
-            "down": 10,
+            "up": 9,
+            "down": 11,
             "front_pos_up": 13,
             "front_pos_down": 15,
             "back_pos_up": 14,
-            "back_pos_down": 16
-        },
-        "hatch": {
-            "open": 7,
-            "close": 9
+            "back_pos_down": 16,
+            "enable": 2
         },
         "dumper": {
             "set": 1

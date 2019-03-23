@@ -10,13 +10,14 @@ import navx
 from components.low.drivetrain import DriveTrain
 from components.low.lift import Lift
 from components.high.lift_mover import LiftMover
-
+from components.low.dumper import Dumper
 
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     lift: Lift
     lift_mover: LiftMover
+    dumper: Dumper
 
     def createObjects(self):
         # Get logger
@@ -65,7 +66,9 @@ class Robot(magicbot.MagicRobot):
         self.hatch_0 = wpilib.Servo(self.ports["hatch"]["servo_0"])
         self.hatch_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
         # Dumper
-        self.dumper = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
+        self.dumper_servo = wpilib.Servo(self.ports["dumper"]["servo"]) 
+        self.dumper_prox = wpilib.DigitalInput(self.ports["dumper"]["prox"])
+        self.dumper_sol = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
                                             self.ports["dumper"]["down"])
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
@@ -86,17 +89,16 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         # Drive
         try:
-            if (abs(self.joystick_0.getX()) < self.config["joystick_deadzone"]
-            and abs(self.joystick_0.getY()) < self.config["joystick_deadzone"]
-            and abs(self.joystick_0.getTwist()) < self.config["joystick_deadzone"]):
-                if not self.lift_mover.isEnabled():
-                    self.drive.setSpeeds(0, 0)
+            if (self.lift_mover.isEnabled()):
+                if not (abs(self.joystick_0.getX()) < self.config["joystick_deadzone"]
+                and abs(self.joystick_0.getY()) < self.config["joystick_deadzone"]
+                and abs(self.joystick_0.getTwist()) < self.config["joystick_deadzone"]):
+                    self.lift_mover.disable()
             else:
-                self.lift_mover.disable()
                 self.drive.setSpeedsFromJoystick(
-                    self.joystick_0.getX(), self.joystick_0.getY(),
-                    self.config["drive"]["twist_ratio"] *
-                    self.joystick_0.getTwist())
+                        self.joystick_0.getX(), self.joystick_0.getY(),
+                        self.config["drive"]["twist_ratio"] *
+                        self.joystick_0.getTwist())
         except:
             self.onException()
         # Lift
@@ -149,10 +151,10 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Hatch
         try:
-            if self.getButton("hatch", "open"):
+            if self.getButton("hatch", "set"):
                 self.hatch_0.set(self.config["hatch"]["pos_0_open"])
                 self.hatch_1.set(self.config["hatch"]["pos_1_open"])
-            elif self.getButton("hatch", "close"):
+            else:
                 self.hatch_0.set(self.config["hatch"]["pos_0_close"])
                 self.hatch_1.set(self.config["hatch"]["pos_1_close"])
         except:
@@ -160,9 +162,9 @@ class Robot(magicbot.MagicRobot):
         # Dumper
         try:
             if self.getButton("dumper", "set"):
-                self.dumper.set(wpilib.DoubleSolenoid.Value.kForward)
+                self.dumper.set(True)
             else:
-                self.dumper.set(wpilib.DoubleSolenoid.Value.kReverse)
+                self.dumper.set(False)
         except:
             self.onException()
         # Debug
@@ -173,10 +175,8 @@ class Robot(magicbot.MagicRobot):
         pass
 
     def testPeriodic(self):
-        self.drive.setSpeeds(0.5, 0)
-        self.timer.delay(1)
-        self.drive.setSpeeds(0, 0.5)
-        self.timer.delay(1)
+        self.dumper_servo.set((self.joystick_0.getThrottle() + 1) / 2)
+        self.logger.info(str((self.joystick_0.getThrottle() + 1) / 2) + " " + str((self.joystick_1.getThrottle() + 1) / 2))
 
     def disabledInit(self):
         self.lift_mover.disable()

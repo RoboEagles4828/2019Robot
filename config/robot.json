@@ -8,10 +8,10 @@
         "speed": 1.0
     },
     "hatch": {
-        "pos_0_open": 1.0,
-        "pos_1_open": 1.0,
-        "pos_0_close": 0.2,
-        "pos_1_close": 0.2
+        "pos_0_open": 0.18,
+        "pos_1_open": 0.55,
+        "pos_0_close": 0.55,
+        "pos_1_close": 0.88
     },
-    "joystick_deadzone": 0.1
+    "joystick_deadzone": 0.4
 }

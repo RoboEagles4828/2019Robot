@@ -20,7 +20,9 @@
         "servo_1": 2
     },
     "dumper": {
-        "up": 2,
-        "down": 0
+        "up": 0,
+        "down": 2,
+        "servo": 9,
+        "prox": 9
     }
 }
