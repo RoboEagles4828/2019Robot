@@ -9,17 +9,13 @@ import navx
 
 from components.low.drivetrain import DriveTrain
 from components.low.lift import Lift
-from components.low.hatch_grabber import HatchGrabber
-
 from components.high.lift_mover import LiftMover
-
 
 
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
     lift: Lift
-    hatch_grabber: HatchGrabber
     lift_mover: LiftMover
 
     def createObjects(self):
@@ -65,14 +61,14 @@ class Robot(magicbot.MagicRobot):
             self.ports["lift"]["limit_front"])
         self.lift_limit_back = wpilib.DigitalInput(
             self.ports["lift"]["limit_back"])
+        # Hatch
+        self.hatch_0 = wpilib.Servo(self.ports["hatch"]["servo_0"])
+        self.hatch_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
+        # Dumper
+        self.dumper = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
+                                            self.ports["dumper"]["down"])
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
-        # Hatch Grabber
-        self.servo_0 = wpilib.Servo(self.ports["hatch"]["servo_0"])
-        self.servo_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
-        # Bucket
-        self.bucket = wpilib.DoubleSolenoid(
-            self.ports["bucket"]["piston_up"], self.ports["bucket"]["piston_down"])
         # Joysticks
         self.joystick_0 = wpilib.Joystick(0)
         self.joystick_1 = wpilib.Joystick(1)
@@ -153,20 +149,22 @@ class Robot(magicbot.MagicRobot):
                 self.lift_mover.enable()
         except:
             self.onException()
-        # Hatch Grabber
+        # Hatch
         try:
             if self.getButton("hatch", "open"):
-                self.hatch_grabber.open()
-            if self.getButton("hatch", "close"):
-                self.hatch_grabber.close()
+                self.hatch_0.set(self.config["hatch"]["pos_0_open"])
+                self.hatch_1.set(self.config["hatch"]["pos_1_open"])
+            elif self.getButton("hatch", "close"):
+                self.hatch_0.set(self.config["hatch"]["pos_0_close"])
+                self.hatch_1.set(self.config["hatch"]["pos_1_close"])
         except:
             self.onException()
-        # Bucket
+        # Dumper
         try:
-            if self.getButton("bucket", "dump"):
-                self.bucket.set(wpilib.DoubleSolenoid.Value.kForward)
+            if self.getButton("dumper", "set"):
+                self.dumper.set(wpilib.DoubleSolenoid.Value.kForward)
             else:
-                self.bucket.set(wpilib.DoubleSolenoid.Value.kReverse)
+                self.dumper.set(wpilib.DoubleSolenoid.Value.kReverse)
         except:
             self.onException()
         # Debug

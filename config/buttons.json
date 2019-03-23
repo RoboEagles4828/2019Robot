@@ -18,12 +18,12 @@
             "back_pos_up": 14,
             "back_pos_down": 16
         },
-        "bucket": {
-            "dump": 1
-        },
         "hatch": {
             "open": 7,
             "close": 9
+        },
+        "dumper": {
+            "set": 1
         }
     }
 }
