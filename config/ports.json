@@ -16,11 +16,11 @@
         "limit_back": 5
     },
     "hatch": {
-        "servo_0": 12,
-        "servo_1": 11
+        "servo_0": 3,
+        "servo_1": 2
     },
     "dumper": {
         "up": 0,
-        "down": 1
+        "down": 2
     }
 }
