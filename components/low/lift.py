@@ -4,6 +4,7 @@ import ctre
 import navx
 
 from digital_input import DigitalInput
+from analog_input import AnalogInput
 
 
 class Lift:
@@ -16,7 +17,7 @@ class Lift:
     lift_prox_back: DigitalInput
     lift_limit_front: DigitalInput
     lift_limit_back: DigitalInput
-    navx: navx.AHRS
+    navx_yaw: AnalogInput
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
@@ -74,7 +75,7 @@ class Lift:
         self.back_pos = pos
 
     def getNavx(self):
-        return self.navx.getYaw()
+        return self.navx_yaw.get()
 
     def execute(self):
         # Get positions

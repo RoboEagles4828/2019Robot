@@ -1,8 +1,4 @@
 {
-    "drive": {
-        "twist_ratio": 0.8,
-        "hatch_speed": 0.05
-    },
     "lift": {
         "drive_speed": 1.0,
         "speed": 1.0
@@ -13,5 +9,12 @@
         "pos_0_close": 0.2,
         "pos_1_close": 0.2
     },
-    "joystick_deadzone": 0.1
+    "navx": {
+        "average_period": 1
+    },
+    "joystick": {
+        "deadzone": 0.1,
+        "average_period": 1,
+        "twist_ratio": 0.8
+    }
 }

@@ -5,16 +5,19 @@ class DigitalInput:
         # Set filter period
         self.filter_period = filter_period
         # Set initial value
-        self.value = bool(self.getter())
+        self.value = self.get_raw()
         # Create data list
         self.data = [self.value]
+
+    def get_raw(self):
+        return bool(self.getter())
 
     def get(self):
         return self.value
 
     def execute(self):
         # Add data
-        self.data.append(bool(self.getter()))
+        self.data.append(self.get_raw())
         # Drop old data
         if len(self.data) > self.filter_period + 1:
             self.data.pop(0)
