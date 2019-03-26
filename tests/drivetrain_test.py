@@ -2,10 +2,6 @@ import random
 
 from components.low.drivetrain import DriveTrain
 
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
-
 
 def test_normalize(robot):
     drive = DriveTrain()

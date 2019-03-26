@@ -7,6 +7,7 @@ import wpilib
 import ctre
 import navx
 
+from digital_input import DigitalInput
 from components.low.drivetrain import DriveTrain
 from components.low.lift import Lift
 from components.high.lift_mover import LiftMover
@@ -53,14 +54,14 @@ class Robot(magicbot.MagicRobot):
             self.ports["lift"]["drive_right"])
         self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["front"])
         self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["back"])
-        self.lift_prox_front = wpilib.DigitalInput(
-            self.ports["lift"]["prox_front"])
-        self.lift_prox_back = wpilib.DigitalInput(
-            self.ports["lift"]["prox_back"])
-        self.lift_limit_front = wpilib.DigitalInput(
-            self.ports["lift"]["limit_front"])
-        self.lift_limit_back = wpilib.DigitalInput(
-            self.ports["lift"]["limit_back"])
+        self.lift_prox_front = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["prox_front"]).get)
+        self.lift_prox_back = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["prox_back"]).get)
+        self.lift_limit_front = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["limit_front"]).get)
+        self.lift_limit_back = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["limit_back"]).get)
         # Hatch
         self.hatch_0 = wpilib.Servo(self.ports["hatch"]["servo_0"])
         self.hatch_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
@@ -87,8 +88,10 @@ class Robot(magicbot.MagicRobot):
         # Drive
         try:
             if (abs(self.joystick_0.getX()) < self.config["joystick_deadzone"]
-            and abs(self.joystick_0.getY()) < self.config["joystick_deadzone"]
-            and abs(self.joystick_0.getTwist()) < self.config["joystick_deadzone"]):
+                    and abs(self.joystick_0.getY()) <
+                    self.config["joystick_deadzone"]
+                    and abs(self.joystick_0.getTwist()) <
+                    self.config["joystick_deadzone"]):
                 if not self.lift_mover.isEnabled():
                     self.drive.setSpeeds(0, 0)
             else:
