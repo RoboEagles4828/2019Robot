@@ -1,7 +1,10 @@
 {
-    "drive": {
-        "twist_ratio": 0.8,
-        "hatch_speed": 0.05
+    "navx": {
+        "average_period": 1
     },
-    "joystick_deadzone": 0.1
+    "joystick": {
+        "deadzone": 0.1,
+        "average_period": 1,
+        "twist_ratio": 0.8
+    }
 }

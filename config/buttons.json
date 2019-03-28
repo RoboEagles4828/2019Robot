@@ -1,7 +1,7 @@
 {
     "joystick_0": {
-        "solenoid": {
-            "out": 1
+        "dumper": {
+            "set": 1
         }
     },
     "joystick_1": {

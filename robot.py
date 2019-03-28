@@ -6,6 +6,7 @@ import magicbot
 import wpilib
 import navx
 
+from analog_input import AnalogInput
 from components.low.drivetrain import DriveTrain
 
 
@@ -37,14 +38,45 @@ class Robot(magicbot.MagicRobot):
         self.front_right = wpilib.Spark(self.ports["drive"]["front_right"])
         self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
         self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
-        # Solenoid
-        self.solenoid = wpilib.DoubleSolenoid(self.ports["solenoid_out"],
-                                              self.ports["solenoid_in"])
+        # Dumper
+        self.dumper = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
+                                            self.ports["dumper"]["down"])
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
+        self.navx_yaw = AnalogInput(
+            self.navx.getYaw,
+            average_period=self.config["navx"]["average_period"])
         # Joysticks
         self.joystick_0 = wpilib.Joystick(0)
+        self.joystick_0_x = AnalogInput(
+            self.joystick_0.getX,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_0_y = AnalogInput(
+            self.joystick_0.getY,
+            map_a=-1,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_0_twist = AnalogInput(
+            self.joystick_0.getTwist,
+            map_a=self.config["joystick"]["twist_ratio"],
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
         self.joystick_1 = wpilib.Joystick(1)
+        self.joystick_1_x = AnalogInput(
+            self.joystick_1.getX,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_1_y = AnalogInput(
+            self.joystick_1.getY,
+            map_a=-1,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_1_twist = AnalogInput(
+            self.joystick_1.getTwist,
+            map_a=self.config["joystick"]["twist_ratio"],
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
         # Timer
         self.timer = wpilib.Timer()
         self.timer.start()
@@ -59,18 +91,16 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         # Drive
         try:
-            self.drive.setSpeedsFromJoystick(
-                self.joystick_0.getX(), self.joystick_0.getY(),
-                self.config["drive"]["twist_ratio"] *
-                self.joystick_0.getTwist())
+            self.drive.set(self.joystick_0_x.get(), self.joystick_0_y.get(),
+                           self.joystick_0_twist.get())
         except:
             self.onException()
-        # Solenoid
+        # Dumper
         try:
-            self.solenoid.set(
-                wpilib.DoubleSolenoid.Value.kForward if self.
-                getButton("solenoid", "out"
-                          ) else wpilib.DoubleSolenoid.Value.kReverse)
+            if self.getButton("dumper", "set"):
+                self.dumper.set(wpilib.DoubleSolenoid.Value.kForward)
+            else:
+                self.dumper.set(wpilib.DoubleSolenoid.Value.kReverse)
         except:
             self.onException()
 

@@ -5,6 +5,8 @@
         "back_left": 2,
         "back_right": 4
     },
-    "solenoid_out": 5,
-    "solenoid_in": 4
+    "dumper": {
+        "up": 5,
+        "down": 4
+    }
 }
