@@ -74,6 +74,12 @@ class Robot(magicbot.MagicRobot):
         self.navx_yaw = AnalogInput(
             self.navx.getYaw,
             average_period=self.config["navx"]["average_period"])
+        self.navx_roll = AnalogInput(
+            self.navx.getRoll,
+            average_period=self.config["navx"]["average_period"])
+        self.navx_pitch = AnalogInput(
+            self.navx.getPitch,
+            average_period=self.config["navx"]["average_period"])
         # Joysticks
         self.joystick_0 = wpilib.Joystick(0)
         self.joystick_0_x = AnalogInput(
@@ -199,6 +205,9 @@ class Robot(magicbot.MagicRobot):
         # Debug
         for k, v in self.lift_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
+        wpilib.SmartDashboard.putNumber("Navx Yaw", self.navx_yaw.get())
+        wpilib.SmartDashboard.putNumber("Navx Roll", self.navx_roll.get())
+        wpilib.SmartDashboard.putNumber("Navx Pitch", self.navx_pitch.get())
 
     def testInit(self):
         pass
