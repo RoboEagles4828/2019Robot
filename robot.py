@@ -250,8 +250,8 @@ class Robot(magicbot.MagicRobot):
             return joystick.getPOV() == 180
         if value == 16:
             return joystick.getPOV() == 270
-        if joystick.getRawButton(value):
-            self.logger.info("Pressed Button " + group + " " + button)
+        wpilib.SmartDashboard.putBoolean("%s : %s" % (group, button),
+                                         joystick.getRawButton(value))
         return joystick.getRawButton(value)
 
 
