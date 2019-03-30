@@ -14,6 +14,7 @@ from components.low.lift import Lift
 from components.high.lift_mover import LiftMover
 from components.low.dumper import Dumper
 
+
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
@@ -68,11 +69,12 @@ class Robot(magicbot.MagicRobot):
         self.hatch_0 = wpilib.Servo(self.ports["hatch"]["servo_0"])
         self.hatch_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
         # Dumper
-        self.dumper_servo = wpilib.Servo(self.ports["dumper"]["servo"]) 
-        self.dumper_topservo = wpilib.Servo(self.ports["dumper"]["topservo"])
-        self.dumper_prox = wpilib.DigitalInput(self.ports["dumper"]["prox"])
-        self.dumper_sol = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
-                                            self.ports["dumper"]["down"])
+        self.dumper_solenoid = wpilib.DoubleSolenoid(
+            self.ports["dumper"]["up"], self.ports["dumper"]["down"])
+        self.dumper_servo_0 = wpilib.Servo(self.ports["dumper"]["servo_0"])
+        self.dumper_servo_1 = wpilib.Servo(self.ports["dumper"]["servo_1"])
+        self.dumper_prox = DigitalInput(
+            wpilib.DigitalInput(self.ports["dumper"]["prox"]).get)
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
         self.navx_yaw = AnalogInput(
@@ -120,7 +122,8 @@ class Robot(magicbot.MagicRobot):
         self.timer.start()
         # CameraServer
         wpilib.CameraServer.launch()
-        #cs = cscore.CameraServer.getInstance().startAutomaticCapture(return_server=True)
+        #cs = cscore.CameraServer.getInstance().startAutomaticCapture(
+        #    return_server=True)
         #cs.setFPS(10)
         # LiveWindow
         wpilib.LiveWindow.disableAllTelemetry()
@@ -173,7 +176,7 @@ class Robot(magicbot.MagicRobot):
                 self.lift_mover.set(self.config["lift"]["speed"])
             elif self.getButton("lift", "down"):
                 self.lift_mover.disable()
-                self.lift_mover.set(-self.config["lift"]["speed"]*.5)
+                self.lift_mover.set(-self.config["lift"]["speed"] / 2)
             if self.getButton("lift", "front_pos_up"):
                 self.lift.setFrontPos(1)
             elif self.getButton("lift", "front_pos_down"):
@@ -202,10 +205,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Dumper
         try:
-            if self.getButton("dumper", "set"):
-                self.dumper.set(True)
-            else:
-                self.dumper.set(False)
+            self.dumper.set(self.getButton("dumper", "set"))
         except:
             self.onException()
         # Debug
@@ -219,8 +219,7 @@ class Robot(magicbot.MagicRobot):
         pass
 
     def testPeriodic(self):
-        self.dumper_topservo.set((-self.joystick_0.getThrottle() + 1) / 2)
-        self.logger.info((-self.joystick_0.getThrottle() + 1) / 2)
+        pass
 
     def disabledInit(self):
         self.lift_mover.disable()
@@ -251,7 +250,8 @@ class Robot(magicbot.MagicRobot):
             return joystick.getPOV() == 180
         if value == 16:
             return joystick.getPOV() == 270
-        if joystick.getRawButton(value): self.logger.info("Pressed Button " + group + " " + button)
+        if joystick.getRawButton(value):
+            self.logger.info("Pressed Button " + group + " " + button)
         return joystick.getRawButton(value)
 
 

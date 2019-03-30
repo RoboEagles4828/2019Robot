@@ -3,12 +3,14 @@ import os
 import json
 import wpilib
 
+from digital_input import DigitalInput
+
 
 class Dumper:
-    dumper_servo: wpilib.Servo
-    dumper_topservo : wpilib.Servo
-    dumper_prox: wpilib.DigitalInput
-    dumper_sol: wpilib.DoubleSolenoid
+    dumper_solenoid: wpilib.DoubleSolenoid
+    dumper_servo_0: wpilib.Servo
+    dumper_servo_1: wpilib.Servo
+    dumper_prox: DigitalInput
 
     def __init__(self):
         with open(sys.path[0] +
@@ -17,24 +19,30 @@ class Dumper:
             self.config = json.load(f)
         self.pos = False
         self.servo_timer = wpilib.Timer()
-        self.waiting = False
+        self.servo_timer_started = False
 
     def set(self, pos):
         self.pos = pos
 
+    def getProx(self):
+        return self.dumper_prox.get()
+
     def execute(self):
-        if self.dumper_prox.get() and not self.pos:
-            self.dumper_servo.set(self.config["servo"]["on"])
-            self.dumper_topservo.set(self.config["topservo"]["on"])
+        # Set servos
+        if self.getProx() and not self.pos:
+            self.dumper_servo_0.set(self.config["servo_0"]["on"])
+            self.dumper_servo_1.set(self.config["servo_1"]["on"])
         else:
-            self.dumper_servo.set(self.config["servo"]["off"])
-            self.dumper_topservo.set(self.config["topservo"]["off"])
-        if not self.waiting and self.pos:
-            self.waiting = True
-            self.servo_timer.start()
-        if self.waiting and self.pos and self.servo_timer.hasPeriodPassed(0.3):
-            self.dumper_sol.set(wpilib.DoubleSolenoid.Value.kForward)
-            self.waiting = False
-        if not self.pos:
-            self.dumper_sol.set(wpilib.DoubleSolenoid.Value.kReverse)
+            self.dumper_servo_0.set(self.config["servo_0"]["off"])
+            self.dumper_servo_1.set(self.config["servo_1"]["off"])
+        # Set solenoid based on set position and servo timer
+        if self.pos:
+            if not self.servo_timer_started:
+                self.servo_timer.start()
+                self.servo_timer_started = True
+            elif self.servo_timer.hasPeriodPassed(self.config["servo_delay"]):
+                self.dumper_solenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+        else:
             self.servo_timer.reset()
+            self.servo_timer_started = False
+            self.dumper_solenoid.set(wpilib.DoubleSolenoid.Value.kReverse)

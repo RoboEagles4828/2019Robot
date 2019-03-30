@@ -22,8 +22,8 @@
     "dumper": {
         "up": 0,
         "down": 2,
-        "servo": 9,
-        "topservo": 5,
+        "servo_0": 9,
+        "servo_1": 5,
         "prox": 9
     }
 }

@@ -1,10 +1,11 @@
 {
-    "servo": {
+    "servo_0": {
         "on": 0.02,
         "off": 0.34
     },
-    "topservo": {
+    "servo_1": {
         "on": 0.12,
         "off": 0.4
-    }
+    },
+    "servo_delay": 0.3
 }
