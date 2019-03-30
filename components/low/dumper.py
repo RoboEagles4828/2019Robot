@@ -8,8 +8,7 @@ from digital_input import DigitalInput
 
 class Dumper:
     dumper_solenoid: wpilib.DoubleSolenoid
-    dumper_servo_0: wpilib.Servo
-    dumper_servo_1: wpilib.Servo
+    dumper_servo: wpilib.Servo
     dumper_prox: DigitalInput
 
     def __init__(self):
@@ -30,11 +29,9 @@ class Dumper:
     def execute(self):
         # Set servos
         if self.getProx() and not self.pos:
-            self.dumper_servo_0.set(self.config["servo_0"]["on"])
-            self.dumper_servo_1.set(self.config["servo_1"]["on"])
+            self.dumper_servo.set(self.config["servo"]["on"])
         else:
-            self.dumper_servo_0.set(self.config["servo_0"]["off"])
-            self.dumper_servo_1.set(self.config["servo_1"]["off"])
+            self.dumper_servo.set(self.config["servo"]["off"])
         # Set solenoid based on set position and servo timer
         if self.pos:
             if not self.servo_timer_started:
