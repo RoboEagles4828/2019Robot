@@ -7,6 +7,8 @@ import wpilib
 import ctre
 import navx
 
+from digital_input import DigitalInput
+from analog_input import AnalogInput
 from components.low.drivetrain import DriveTrain
 from components.low.lift import Lift
 from components.high.lift_mover import LiftMover
@@ -54,14 +56,14 @@ class Robot(magicbot.MagicRobot):
             self.ports["lift"]["drive_right"])
         self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["front"])
         self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["back"])
-        self.lift_prox_front = wpilib.DigitalInput(
-            self.ports["lift"]["prox_front"])
-        self.lift_prox_back = wpilib.DigitalInput(
-            self.ports["lift"]["prox_back"])
-        self.lift_limit_front = wpilib.DigitalInput(
-            self.ports["lift"]["limit_front"])
-        self.lift_limit_back = wpilib.DigitalInput(
-            self.ports["lift"]["limit_back"])
+        self.lift_prox_front = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["prox_front"]).get)
+        self.lift_prox_back = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["prox_back"]).get)
+        self.lift_limit_front = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["limit_front"]).get)
+        self.lift_limit_back = DigitalInput(
+            wpilib.DigitalInput(self.ports["lift"]["limit_back"]).get)
         # Hatch
         self.hatch_0 = wpilib.Servo(self.ports["hatch"]["servo_0"])
         self.hatch_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
@@ -73,9 +75,46 @@ class Robot(magicbot.MagicRobot):
                                             self.ports["dumper"]["down"])
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
+        self.navx_yaw = AnalogInput(
+            self.navx.getYaw,
+            average_period=self.config["navx"]["average_period"])
+        self.navx_roll = AnalogInput(
+            self.navx.getRoll,
+            average_period=self.config["navx"]["average_period"])
+        self.navx_pitch = AnalogInput(
+            self.navx.getPitch,
+            average_period=self.config["navx"]["average_period"])
         # Joysticks
         self.joystick_0 = wpilib.Joystick(0)
+        self.joystick_0_x = AnalogInput(
+            self.joystick_0.getX,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_0_y = AnalogInput(
+            self.joystick_0.getY,
+            map_a=-1,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_0_twist = AnalogInput(
+            self.joystick_0.getTwist,
+            map_a=self.config["joystick"]["twist_ratio"],
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
         self.joystick_1 = wpilib.Joystick(1)
+        self.joystick_1_x = AnalogInput(
+            self.joystick_1.getX,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_1_y = AnalogInput(
+            self.joystick_1.getY,
+            map_a=-1,
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
+        self.joystick_1_twist = AnalogInput(
+            self.joystick_1.getTwist,
+            map_a=self.config["joystick"]["twist_ratio"],
+            deadzone=self.config["joystick"]["deadzone"],
+            average_period=self.config["joystick"]["average_period"])
         # Timer
         self.timer = wpilib.Timer()
         self.timer.start()
@@ -92,16 +131,15 @@ class Robot(magicbot.MagicRobot):
     def teleopPeriodic(self):
         # Drive
         try:
-            if (self.lift_mover.isEnabled()):
-                if not (abs(self.joystick_0.getX()) < self.config["joystick_deadzone"]
-                and abs(self.joystick_0.getY()) < self.config["joystick_deadzone"]
-                and abs(self.joystick_0.getTwist()) < self.config["joystick_deadzone"]):
-                    self.lift_mover.disable()
+            if (self.joystick_0_x.get(), self.joystick_0_y.get(),
+                    self.joystick_0_twist.get()) == (0, 0, 0):
+                if not self.lift_mover.isEnabled():
+                    self.drive.setSpeeds(0, 0)
             else:
-                self.drive.setSpeedsFromJoystick(
-                        self.joystick_0.getX(), self.joystick_0.getY(),
-                        self.config["drive"]["twist_ratio"] *
-                        self.joystick_0.getTwist())
+                self.lift_mover.disable()
+                self.drive.set(self.joystick_0_x.get(),
+                               self.joystick_0_y.get(),
+                               self.joystick_0_twist.get())
         except:
             self.onException()
         # Lift
@@ -173,6 +211,9 @@ class Robot(magicbot.MagicRobot):
         # Debug
         for k, v in self.lift_mover.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
+        wpilib.SmartDashboard.putNumber("Navx Yaw", self.navx_yaw.get())
+        wpilib.SmartDashboard.putNumber("Navx Roll", self.navx_roll.get())
+        wpilib.SmartDashboard.putNumber("Navx Pitch", self.navx_pitch.get())
 
     def testInit(self):
         pass

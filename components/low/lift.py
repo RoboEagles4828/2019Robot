@@ -3,6 +3,9 @@ import wpilib
 import ctre
 import navx
 
+from digital_input import DigitalInput
+from analog_input import AnalogInput
+
 
 class Lift:
 
@@ -10,11 +13,11 @@ class Lift:
     lift_back: ctre.WPI_TalonSRX
     lift_drive_left: ctre.WPI_VictorSPX
     lift_drive_right: ctre.WPI_VictorSPX
-    lift_prox_front: wpilib.DigitalInput
-    lift_prox_back: wpilib.DigitalInput
-    lift_limit_front: wpilib.DigitalInput
-    lift_limit_back: wpilib.DigitalInput
-    navx: navx.AHRS
+    lift_prox_front: DigitalInput
+    lift_prox_back: DigitalInput
+    lift_limit_front: DigitalInput
+    lift_limit_back: DigitalInput
+    navx_yaw: AnalogInput
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
@@ -72,7 +75,7 @@ class Lift:
         self.back_pos = pos
 
     def getNavx(self):
-        return self.navx.getYaw()
+        return self.navx_yaw.get()
 
     def execute(self):
         # Get positions
