@@ -8,8 +8,7 @@
     "dumper": {
         "up": 5,
         "down": 4,
-        "servo_0": 9,
-        "servo_1": 5,
+        "servo": 9,
         "prox": 9
     }
 }
