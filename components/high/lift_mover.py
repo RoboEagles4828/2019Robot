@@ -91,14 +91,13 @@ class LiftMover:
                                      self.config["drive_speed"])
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
                 return
-            # Stop lift drive
+            # Stop drive
             self.lift.setDriveSpeed(0)
+            self.drive.setSpeeds(0, 0)
             # Lift back up
             if self.lift.getBackPos() != -1:
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
                 return
-            # Stop drivetrain
-            self.drive.setSpeeds(0, 0)
             self.enabled = False
             self.status = False
         else:

@@ -23,6 +23,7 @@
         "up": 0,
         "down": 2,
         "servo": 9,
+        "topservo": 5,
         "prox": 9
     }
 }

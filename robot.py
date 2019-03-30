@@ -67,6 +67,7 @@ class Robot(magicbot.MagicRobot):
         self.hatch_1 = wpilib.Servo(self.ports["hatch"]["servo_1"])
         # Dumper
         self.dumper_servo = wpilib.Servo(self.ports["dumper"]["servo"]) 
+        self.dumper_topservo = wpilib.Servo(self.ports["dumper"]["topservo"])
         self.dumper_prox = wpilib.DigitalInput(self.ports["dumper"]["prox"])
         self.dumper_sol = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
                                             self.ports["dumper"]["down"])
@@ -80,6 +81,8 @@ class Robot(magicbot.MagicRobot):
         self.timer.start()
         # CameraServer
         wpilib.CameraServer.launch()
+        #cs = cscore.CameraServer.getInstance().startAutomaticCapture(return_server=True)
+        #cs.setFPS(10)
         # LiveWindow
         wpilib.LiveWindow.disableAllTelemetry()
 
@@ -132,7 +135,7 @@ class Robot(magicbot.MagicRobot):
                 self.lift_mover.set(self.config["lift"]["speed"])
             elif self.getButton("lift", "down"):
                 self.lift_mover.disable()
-                self.lift_mover.set(-self.config["lift"]["speed"])
+                self.lift_mover.set(-self.config["lift"]["speed"]*.5)
             if self.getButton("lift", "front_pos_up"):
                 self.lift.setFrontPos(1)
             elif self.getButton("lift", "front_pos_down"):
@@ -175,8 +178,8 @@ class Robot(magicbot.MagicRobot):
         pass
 
     def testPeriodic(self):
-        self.dumper_servo.set((self.joystick_0.getThrottle() + 1) / 2)
-        self.logger.info(str((self.joystick_0.getThrottle() + 1) / 2) + " " + str((self.joystick_1.getThrottle() + 1) / 2))
+        self.dumper_topservo.set((-self.joystick_0.getThrottle() + 1) / 2)
+        self.logger.info((-self.joystick_0.getThrottle() + 1) / 2)
 
     def disabledInit(self):
         self.lift_mover.disable()
@@ -207,6 +210,7 @@ class Robot(magicbot.MagicRobot):
             return joystick.getPOV() == 180
         if value == 16:
             return joystick.getPOV() == 270
+        if joystick.getRawButton(value): self.logger.info("Pressed Button " + group + " " + button)
         return joystick.getRawButton(value)
 
 
