@@ -6,13 +6,16 @@ import magicbot
 import wpilib
 import navx
 
+from digital_input import DigitalInput
 from analog_input import AnalogInput
 from components.low.drivetrain import DriveTrain
+from components.low.dumper import Dumper
 
 
 class Robot(magicbot.MagicRobot):
 
     drive: DriveTrain
+    dumper: Dumper
 
     def createObjects(self):
         # Get logger
@@ -39,8 +42,12 @@ class Robot(magicbot.MagicRobot):
         self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
         self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
         # Dumper
-        self.dumper = wpilib.DoubleSolenoid(self.ports["dumper"]["up"],
-                                            self.ports["dumper"]["down"])
+        self.dumper_solenoid = wpilib.DoubleSolenoid(
+            self.ports["dumper"]["up"], self.ports["dumper"]["down"])
+        self.dumper_servo_0 = wpilib.Servo(self.ports["dumper"]["servo_0"])
+        self.dumper_servo_1 = wpilib.Servo(self.ports["dumper"]["servo_1"])
+        self.dumper_prox = DigitalInput(
+            wpilib.DigitalInput(self.ports["dumper"]["prox"]).get)
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
         self.navx_yaw = AnalogInput(
@@ -88,6 +95,9 @@ class Robot(magicbot.MagicRobot):
         self.timer.start()
         # CameraServer
         wpilib.CameraServer.launch()
+        #cs = cscore.CameraServer.getInstance().startAutomaticCapture(
+        #    return_server=True)
+        #cs.setFPS(10)
         # LiveWindow
         wpilib.LiveWindow.disableAllTelemetry()
 
@@ -103,10 +113,7 @@ class Robot(magicbot.MagicRobot):
             self.onException()
         # Dumper
         try:
-            if self.getButton("dumper", "set"):
-                self.dumper.set(wpilib.DoubleSolenoid.Value.kForward)
-            else:
-                self.dumper.set(wpilib.DoubleSolenoid.Value.kReverse)
+            self.dumper.set(self.getButton("dumper", "set"))
         except:
             self.onException()
         # Debug
@@ -118,10 +125,7 @@ class Robot(magicbot.MagicRobot):
         pass
 
     def testPeriodic(self):
-        self.drive.setSpeeds(0.5, 0)
-        self.timer.delay(1)
-        self.drive.setSpeeds(0, 0.5)
-        self.timer.delay(1)
+        pass
 
     def disabledInit(self):
         pass
@@ -152,6 +156,8 @@ class Robot(magicbot.MagicRobot):
             return joystick.getPOV() == 180
         if value == 16:
             return joystick.getPOV() == 270
+        wpilib.SmartDashboard.putBoolean("%s : %s" % (group, button),
+                                         joystick.getRawButton(value))
         return joystick.getRawButton(value)
 
 
