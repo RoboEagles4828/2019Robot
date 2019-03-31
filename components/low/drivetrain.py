@@ -1,7 +1,7 @@
 import ctre
 
 
-class DriveTrain:
+class Drivetrain:
 
     front_left: ctre.WPI_TalonSRX
     front_right: ctre.WPI_TalonSRX
@@ -9,29 +9,35 @@ class DriveTrain:
     back_right: ctre.WPI_TalonSRX
 
     def __init__(self):
-        self.speed_left = 0
-        self.speed_right = 0
+        self.left_speed = 0
+        self.right_speed = 0
 
     def set(self, x, y, twist):
-        speed_left = (y + (x if x > 0 else 0) + twist)
-        speed_right = (y - (x if x < 0 else 0) - twist)
+        left_speed = (y + (x if x > 0 else 0) + twist)
+        right_speed = (y - (x if x < 0 else 0) - twist)
         # Normalization
-        speed_max = max(abs(speed_left), abs(speed_right))
+        speed_max = max(abs(left_speed), abs(right_speed))
         if speed_max > 1:
-            speed_left /= speed_max
-            speed_right /= speed_max
+            left_speed /= speed_max
+            right_speed /= speed_max
         # Set speeds
-        self.setSpeeds(speed_left, speed_right)
+        self.setSpeeds(left_speed, right_speed)
 
-    def setSpeeds(self, speed_left, speed_right):
-        self.speed_left = speed_left
-        self.speed_right = speed_right
+    def setSpeeds(self, left_speed, right_speed):
+        self.left_speed = left_speed
+        self.right_speed = right_speed
 
     def getSpeeds(self):
-        return (self.speed_left, self.speed_right)
+        return (self.left_speed, self.right_speed)
+
+    def getEncLeft(self):
+        pass
+
+    def getEncRight(self):
+        pass
 
     def execute(self):
-        self.front_left.set(self.speed_left)
-        self.front_right.set(self.speed_right)
-        self.back_left.set(self.speed_left)
-        self.back_right.set(self.speed_right)
+        self.front_left.set(self.left_speed)
+        self.front_right.set(self.right_speed)
+        self.back_left.set(self.left_speed)
+        self.back_right.set(self.right_speed)

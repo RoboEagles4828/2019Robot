@@ -1,14 +1,14 @@
-import json
 import sys
 import os
+import json
 
-from components.low.drivetrain import DriveTrain
+from components.low.drivetrain import Drivetrain
 from components.low.lift import Lift
 
 
 class LiftMover:
 
-    drive: DriveTrain
+    drive: Drivetrain
     lift: Lift
 
     def __init__(self):

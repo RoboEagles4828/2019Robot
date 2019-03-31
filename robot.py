@@ -1,7 +1,7 @@
 import logging
-import json
 import sys
 import os
+import json
 import magicbot
 import wpilib
 import ctre
@@ -9,7 +9,7 @@ import navx
 
 from digital_input import DigitalInput
 from analog_input import AnalogInput
-from components.low.drivetrain import DriveTrain
+from components.low.drivetrain import Drivetrain
 from components.low.lift import Lift
 from components.high.lift_mover import LiftMover
 from components.low.dumper import Dumper
@@ -17,7 +17,7 @@ from components.low.dumper import Dumper
 
 class Robot(magicbot.MagicRobot):
 
-    drive: DriveTrain
+    drive: Drivetrain
     lift: Lift
     lift_mover: LiftMover
     dumper: Dumper
