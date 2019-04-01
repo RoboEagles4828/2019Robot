@@ -6,7 +6,7 @@ from components.low.drivetrain import Drivetrain
 from components.low.lift import Lift
 
 
-class LiftMover:
+class AutoLift:
 
     drive: Drivetrain
     lift: Lift
@@ -14,7 +14,7 @@ class LiftMover:
     def __init__(self):
         with open(sys.path[0] +
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
-                  "config/lift.json") as f:
+                  "config/auto_lift.json") as f:
             self.config = json.load(f)
         self.enabled = False
         self.status = False
@@ -30,14 +30,14 @@ class LiftMover:
         return self.enabled
 
     def set(self, speed):
-        if self.config["lift"]["use_navx"] == 1:
+        if self.config["use_navx"] == 1:
             if (self.lift.getNavx() < 0) != (speed > 0):
                 self.lift.setFrontSpeed(speed)
                 self.lift.setBackSpeed(
-                    speed - self.config["lift"]["p"] * self.lift.getNavx())
+                    speed - self.config["navx_p"] * self.lift.getNavx())
             else:
                 self.lift.setFrontSpeed(
-                    speed + self.config["lift"]["p"] * self.lift.getNavx())
+                    speed + self.config["navx_p"] * self.lift.getNavx())
                 self.lift.setBackSpeed(speed)
         else:
             if speed > 0:

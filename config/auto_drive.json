@@ -1,0 +1,13 @@
+{
+    "drive": {
+        "name": "auton0",
+        "left_p": 1.0,
+        "left_i": 0.0,
+        "left_d": 0.0,
+        "right_p": 1.0,
+        "right_i": 0.0,
+        "right_d": 0.0,
+        "max_velocity": 1.7
+    },
+    "navx_p": 1.0
+}

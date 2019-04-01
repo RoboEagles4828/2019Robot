@@ -17,7 +17,7 @@ class Lift:
     lift_prox_back: DigitalInput
     lift_limit_front: DigitalInput
     lift_limit_back: DigitalInput
-    navx_yaw: AnalogInput
+    navx_pitch: AnalogInput
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
@@ -75,7 +75,7 @@ class Lift:
         self.back_pos = pos
 
     def getNavx(self):
-        return self.navx_yaw.get()
+        return self.navx_pitch.get()
 
     def execute(self):
         # Get positions

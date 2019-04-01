@@ -7,6 +7,7 @@ from digital_input import DigitalInput
 
 
 class Dumper:
+
     dumper_solenoid: wpilib.DoubleSolenoid
     dumper_servo_0: wpilib.Servo
     dumper_servo_1: wpilib.Servo

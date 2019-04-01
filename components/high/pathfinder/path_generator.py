@@ -6,19 +6,19 @@ import pathfinder
 
 class PathGenerator:
     @staticmethod
-    def generate(waypoints,
+    def generate(path,
                  dt=0.02,
                  max_velocity=1.7,
                  max_acceleration=2.0,
                  max_jerk=60.0):
         return pathfinder.generate(
-            waypoints,
+            path,
             pathfinder.FIT_HERMITE_CUBIC,
             pathfinder.SAMPLES_HIGH,
             dt=dt,
             max_velocity=max_velocity,
             max_acceleration=max_acceleration,
-            max_jerk=max_jerk)
+            max_jerk=max_jerk)[1]
 
     @staticmethod
     def set(name, trajectory):

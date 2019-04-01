@@ -1,5 +1,7 @@
 import ctre
 
+from analog_input import AnalogInput
+
 
 class Drivetrain:
 
@@ -7,6 +9,7 @@ class Drivetrain:
     front_right: ctre.WPI_TalonSRX
     back_left: ctre.WPI_TalonSRX
     back_right: ctre.WPI_TalonSRX
+    navx_yaw: AnalogInput
 
     def __init__(self):
         self.left_speed = 0
@@ -31,10 +34,13 @@ class Drivetrain:
         return (self.left_speed, self.right_speed)
 
     def getEncLeft(self):
-        pass
+        return 0
 
     def getEncRight(self):
-        pass
+        return 0
+
+    def getNavx(self):
+        return self.navx_yaw.get()
 
     def execute(self):
         self.front_left.set(self.left_speed)

@@ -16,5 +16,7 @@
         "deadzone": 0.1,
         "average_period": 1,
         "twist_ratio": 0.8
-    }
+    },
+    "delay": 0.03,
+    "use_auton": 1
 }

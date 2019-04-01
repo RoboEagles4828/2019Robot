@@ -2,10 +2,10 @@
     "lift": {
         "drive_speed": 1.0,
         "speed": 1.0,
-        "use_navx": 0,
-        "navx_p": 2.0,
         "up_ratio": 0.9,
         "down_ratio": 0.9
     },
-    "drive_speed": 0.19
+    "drive_speed": 0.19,
+    "use_navx": 0,
+    "navx_p": 1.0
 }

@@ -11,23 +11,23 @@ from digital_input import DigitalInput
 from analog_input import AnalogInput
 from components.low.drivetrain import Drivetrain
 from components.low.lift import Lift
-from components.high.lift_mover import LiftMover
 from components.low.dumper import Dumper
+from components.high.pathfinder.path_generator import PathGenerator
+from components.high.pathfinder.auto_drive import AutoDrive
+from components.high.auto_lift import AutoLift
 
 
 class Robot(magicbot.MagicRobot):
 
     drive: Drivetrain
     lift: Lift
-    lift_mover: LiftMover
     dumper: Dumper
+    auto_drive: AutoDrive
+    auto_lift: AutoLift
 
     def createObjects(self):
         # Get logger
         self.logger = logging.getLogger("Robot")
-        # Set MagicRobot constants
-        self.control_loop_wait_time = 0.03
-        self.use_teleop_in_autonomous = True
         # Load ports, buttons, and config
         with open(sys.path[0] +
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
@@ -41,6 +41,9 @@ class Robot(magicbot.MagicRobot):
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
                   "config/robot.json") as f:
             self.config = json.load(f)
+        # Set MagicRobot constants
+        self.control_loop_wait_time = self.config["delay"]
+        self.use_teleop_in_autonomous = not self.config["use_auton"]
         # Drive
         self.drive_front_left = ctre.WPI_TalonSRX(
             self.ports["drive"]["front_left"])
@@ -136,10 +139,10 @@ class Robot(magicbot.MagicRobot):
         try:
             if (self.joystick_0_x.get(), self.joystick_0_y.get(),
                     self.joystick_0_twist.get()) == (0, 0, 0):
-                if not self.lift_mover.isEnabled():
+                if not self.auto_lift.isEnabled():
                     self.drive.setSpeeds(0, 0)
             else:
-                self.lift_mover.disable()
+                self.auto_lift.disable()
                 self.drive.set(self.joystick_0_x.get(),
                                self.joystick_0_y.get(),
                                self.joystick_0_twist.get())
@@ -148,35 +151,35 @@ class Robot(magicbot.MagicRobot):
         # Lift
         try:
             if self.getButton("lift", "drive"):
-                self.lift_mover.disable()
+                self.auto_lift.disable()
                 self.lift.setDriveSpeed(self.config["lift"]["drive_speed"])
             else:
-                if not self.lift_mover.isEnabled():
+                if not self.auto_lift.isEnabled():
                     self.lift.setDriveSpeed(0)
             if self.getButton("lift", "front_up"):
-                self.lift_mover.disable()
+                self.auto_lift.disable()
                 self.lift.setFrontSpeed(self.config["lift"]["speed"])
             elif self.getButton("lift", "front_down"):
-                self.lift_mover.disable()
+                self.auto_lift.disable()
                 self.lift.setFrontSpeed(-self.config["lift"]["speed"])
             else:
-                if not self.lift_mover.isEnabled():
+                if not self.auto_lift.isEnabled():
                     self.lift.setFrontSpeed(0)
             if self.getButton("lift", "back_up"):
-                self.lift_mover.disable()
+                self.auto_lift.disable()
                 self.lift.setBackSpeed(self.config["lift"]["speed"])
             elif self.getButton("lift", "back_down"):
-                self.lift_mover.disable()
+                self.auto_lift.disable()
                 self.lift.setBackSpeed(-self.config["lift"]["speed"])
             else:
-                if not self.lift_mover.isEnabled():
+                if not self.auto_lift.isEnabled():
                     self.lift.setBackSpeed(0)
             if self.getButton("lift", "up"):
-                self.lift_mover.disable()
-                self.lift_mover.set(self.config["lift"]["speed"])
+                self.auto_lift.disable()
+                self.auto_lift.set(self.config["lift"]["speed"])
             elif self.getButton("lift", "down"):
-                self.lift_mover.disable()
-                self.lift_mover.set(-self.config["lift"]["speed"] / 2)
+                self.auto_lift.disable()
+                self.auto_lift.set(-self.config["lift"]["speed"] / 2)
             if self.getButton("lift", "front_pos_up"):
                 self.lift.setFrontPos(1)
             elif self.getButton("lift", "front_pos_down"):
@@ -190,7 +193,7 @@ class Robot(magicbot.MagicRobot):
         # Lift mover
         try:
             if self.getButton("lift", "enable"):
-                self.lift_mover.enable()
+                self.auto_lift.enable()
         except:
             self.onException()
         # Hatch
@@ -209,11 +212,10 @@ class Robot(magicbot.MagicRobot):
         except:
             self.onException()
         # Debug
-        for k, v in self.lift_mover.debug().items():
+        for k, v in self.auto_drive.debug().items():
             wpilib.SmartDashboard.putNumber(k, v)
-        wpilib.SmartDashboard.putNumber("Navx Yaw", self.navx_yaw.get())
-        wpilib.SmartDashboard.putNumber("Navx Roll", self.navx_roll.get())
-        wpilib.SmartDashboard.putNumber("Navx Pitch", self.navx_pitch.get())
+        for k, v in self.auto_lift.debug().items():
+            wpilib.SmartDashboard.putNumber(k, v)
 
     def testInit(self):
         pass
@@ -222,7 +224,7 @@ class Robot(magicbot.MagicRobot):
         pass
 
     def disabledInit(self):
-        self.lift_mover.disable()
+        self.auto_lift.disable()
 
     def getJoystickButton(self, group, button):
         for j, groups in self.buttons.items():
