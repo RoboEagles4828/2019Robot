@@ -10,7 +10,7 @@ def test_digital_input(robot):
     digital_input = DigitalInput(lambda: value, filter_period=1)
     for _ in range(1000):
         value = random.randint(0, 1)
-        digital_input.execute()
+        digital_input.update()
         if prev_value == value:
             test_value = value
         assert digital_input.get() == test_value

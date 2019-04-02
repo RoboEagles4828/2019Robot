@@ -11,7 +11,7 @@ def test_analog_input(robot):
         lambda: value, map_a=2, map_b=-1, deadzone=0.1, average_period=1)
     for _ in range(1000):
         value = random.random()
-        analog_input.execute()
+        analog_input.update()
         test_value = value + prev_value - 1
         if -0.1 < test_value < 0.1:
             test_value = 0
