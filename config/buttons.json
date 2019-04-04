@@ -1,7 +1,9 @@
 {
     "joystick_0": {
-        "hatch": {
-            "set": 1
+        "duck": {
+            "close_open": 1,
+            "eject": 2
+
         }
     },
     "joystick_1": {
@@ -23,4 +25,5 @@
             "set": 1
         }
     }
+
 }
