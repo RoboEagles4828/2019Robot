@@ -17,9 +17,14 @@ class AutoDrive:
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
                   "config/auto_drive.json") as f:
             self.config = json.load(f)
+        # Set default trajectory
+        self.set(self.config["drive"]["default_name"])
+        # Set enabled
+        self.enabled = False
+
+    def set(self, name):
         # Get trajectory
-        self.trajectory = PathGenerator.get(self.config["drive"]["name"])
-        self.max_velocity = self.config["drive"]["max_velocity"]
+        self.trajectory = PathGenerator.get(name)
         # Set tank modifier
         modifier = pathfinder.modifiers.TankModifier(
             self.trajectory).modify(0.5)
@@ -30,20 +35,29 @@ class AutoDrive:
         self.left.configureEncoder(0, 4096, 0.2032)
         self.right.configureEncoder(0, 4096, 0.2032)
         # Set PIDVA values
-        self.left.configurePIDVA(
-            self.config["drive"]["left_p"], self.config["drive"]["left_i"],
-            self.config["drive"]["left_d"], 1 / self.max_velocity, 0)
-        self.right.configurePIDVA(
-            self.config["drive"]["right_p"], self.config["drive"]["right_i"],
-            self.config["drive"]["right_d"], 1 / self.max_velocity, 0)
-        # Set enabled
-        self.enabled = False
+        self.left.configurePIDVA(self.config["drive"]["left_p"],
+                                 self.config["drive"]["left_i"],
+                                 self.config["drive"]["left_d"],
+                                 1 / self.config["drive"]["max_velocity"], 0)
+        self.right.configurePIDVA(self.config["drive"]["right_p"],
+                                  self.config["drive"]["right_i"],
+                                  self.config["drive"]["right_d"],
+                                  1 / self.config["drive"]["max_velocity"], 0)
+        # Set segment and status
+        self.segment = self.getSegment()
+        self.status = 0
 
     def enable(self):
         self.enabled = True
 
     def disable(self):
         self.enabled = False
+
+    def getSegment(self):
+        return self.left.getSegment()
+
+    def getStatus(self):
+        return self.status
 
     def debug(self):
         return {
@@ -57,6 +71,9 @@ class AutoDrive:
 
     def execute(self):
         if self.enabled:
+            if self.getSegment() is not self.segment:
+                self.status += 1
+                self.segment = self.getSegment()
             angle_speed = self.config[
                 "navx_p"] / 180 * pathfinder.boundHalfDegrees(
                     pathfinder.r2d(self.left.getHeading()) -

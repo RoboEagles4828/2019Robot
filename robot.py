@@ -12,7 +12,6 @@ from analog_input import AnalogInput
 from components.low.drivetrain import Drivetrain
 from components.low.lift import Lift
 from components.low.dumper import Dumper
-from components.high.pathfinder.path_generator import PathGenerator
 from components.high.pathfinder.auto_drive import AutoDrive
 from components.high.auto_lift import AutoLift
 
