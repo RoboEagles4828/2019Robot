@@ -16,12 +16,13 @@ from components.high.pathfinder.auto_drive import AutoDrive
 from components.high.auto_lift import AutoLift
 from components.low.duck import Duck
 
+
 class Robot(magicbot.MagicRobot):
 
     drive: Drivetrain
     lift: Lift
-    dumper: Dumper
     duck: Duck
+    dumper: Dumper
     auto_drive: AutoDrive
     auto_lift: AutoLift
 
@@ -75,12 +76,10 @@ class Robot(magicbot.MagicRobot):
         self.inputs.append(self.lift_limit_front)
         self.inputs.append(self.lift_limit_back)
         # Duck
-        self.duck_solenoid = wpilib.DoubleSolenoid(
-            self.ports["duck"]["solenoid_a"], self.ports["duck"]["solenoid_b"])
-        self.duck_servo_0 =  wpilib.Servo(
-            self.ports["duck"]["servo_0"])
-        self.duck_servo_1 = wpilib.Servo(
-            self.ports["duck"]["servo_1"])
+        self.duck_solenoid = wpilib.DoubleSolenoid(self.ports["duck"]["out"],
+                                                   self.ports["duck"]["in"])
+        self.duck_servo_0 = wpilib.Servo(self.ports["duck"]["servo_0"])
+        self.duck_servo_1 = wpilib.Servo(self.ports["duck"]["servo_1"])
         # Dumper
         self.dumper_solenoid = wpilib.DoubleSolenoid(
             self.ports["dumper"]["up"], self.ports["dumper"]["down"])
@@ -209,30 +208,22 @@ class Robot(magicbot.MagicRobot):
                 self.lift.setBackPos(-1)
         except:
             self.onException()
-        # Lift mover
-        try:
-            if self.getButton("lift", "enable"):
-                self.auto_lift.enable()
-        except:
-            self.onException()
         # Duck
         try:
-            if self.getButton("duck", "eject"): #closing the bill and eject to dispense hatch--leaves bill closed
-                self.duck.setBill(False)
-                self.duck.setPusher(True)
-            else:
-                self.duck.setBill(True)
-                self.duck.setPusher(False)
-            if self.getButton("duck", "close_open"): #closes bill while button is being held, then returns to open
-                self.duck.setBill(False)
-            else:
-                self.duck.setBill(True)
-
+            self.duck.set(self.getButton("duck", "set"))
+            self.duck.setServo(self.getButton("duck", "set"))
+            self.duck.setServo(self.getButton("duck", "set_servo"))
         except:
             self.onException()
         # Dumper
         try:
             self.dumper.set(self.getButton("dumper", "set"))
+        except:
+            self.onException()
+        # Auto Lift
+        try:
+            if self.getButton("lift", "enable"):
+                self.auto_lift.enable()
         except:
             self.onException()
         # Debug

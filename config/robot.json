@@ -3,12 +3,6 @@
         "drive_speed": 1.0,
         "speed": 1.0
     },
-    "hatch": {
-        "pos_0_open": 0.18,
-        "pos_1_open": 0.55,
-        "pos_0_close": 0.55,
-        "pos_1_close": 0.88
-    },
     "navx": {
         "average_period": 1
     },

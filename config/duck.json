@@ -1,8 +1,8 @@
 {
-    "bill": {
-        "pos_0_open": 0.18,
-        "pos_0_close": 0.55,
-        "pos_1_open": 0.55,
-        "pos_1_close": 0.88
+    "servo": {
+        "pos_0_open": 0.55,
+        "pos_0_close": 0.18,
+        "pos_1_open": 0.88,
+        "pos_1_close": 0.55
     }
 }

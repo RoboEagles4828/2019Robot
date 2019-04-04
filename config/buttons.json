@@ -1,9 +1,8 @@
 {
     "joystick_0": {
         "duck": {
-            "close_open": 1,
-            "eject": 2
-
+            "set": 2,
+            "set_servo": 1
         }
     },
     "joystick_1": {
@@ -25,5 +24,4 @@
             "set": 1
         }
     }
-
 }
