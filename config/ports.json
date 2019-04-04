@@ -15,9 +15,11 @@
         "limit_front": 3,
         "limit_back": 5
     },
-    "hatch": {
+    "duck": { 
         "servo_0": 3,
-        "servo_1": 2
+        "servo_1": 2,
+        "solenoid_a": 2,
+        "solenoid_b": 5
     },
     "dumper": {
         "up": 0,
