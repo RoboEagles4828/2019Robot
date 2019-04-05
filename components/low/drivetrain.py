@@ -34,10 +34,16 @@ class Drivetrain:
         return (self.left_speed, self.right_speed)
 
     def getEncLeft(self):
-        return 0
+        return self.front_left.getQuadraturePosition()
+
+    def setEncLeft(self, pos):
+        self.front_left.setQuadraturePosition(pos)
 
     def getEncRight(self):
-        return 0
+        return self.front_right.getQuadraturePosition()
+
+    def setEncRight(self, pos):
+        self.front_right.setQuadraturePosition(pos)
 
     def getNavx(self):
         return self.navx_yaw.get()

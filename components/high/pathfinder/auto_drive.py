@@ -18,13 +18,16 @@ class AutoDrive:
                   "config/auto_drive.json") as f:
             self.config = json.load(f)
         # Set default trajectory
-        self.set(self.config["drive"]["default_name"])
+        self.setTrajectories(self.config["drive"]["default_name"])
+        self.set(0)
+        # Set trajectory position
+        self.pos = 0
         # Set enabled
         self.enabled = False
 
-    def set(self, name):
+    def set(self, pos):
         # Get trajectory
-        self.trajectory = PathGenerator.get(name)
+        self.trajectory = self.trajectories[pos]
         # Set tank modifier
         modifier = pathfinder.modifiers.TankModifier(
             self.trajectory).modify(0.5)
@@ -43,21 +46,24 @@ class AutoDrive:
                                   self.config["drive"]["right_i"],
                                   self.config["drive"]["right_d"],
                                   1 / self.config["drive"]["max_velocity"], 0)
-        # Set segment and status
-        self.segment = self.getSegment()
-        self.status = 0
+
+    def next(self):
+        if (self.pos + 1) < len(self.trajectories):
+            self.pos += 1
+            self.set(self.pos)
+
+    def setTrajectories(self, name):
+        self.trajectories = PathGenerator.get(name)
 
     def enable(self):
         self.enabled = True
 
     def disable(self):
         self.enabled = False
+        self.drive.setSpeeds(0, 0)
 
-    def getSegment(self):
-        return self.left.getSegment()
-
-    def getStatus(self):
-        return self.status
+    def isFinished(self):
+        return self.left.isFinished() and self.right.isFinished()
 
     def debug(self):
         return {
@@ -71,9 +77,6 @@ class AutoDrive:
 
     def execute(self):
         if self.enabled:
-            if self.getSegment() is not self.segment:
-                self.status += 1
-                self.segment = self.getSegment()
             angle_speed = self.config[
                 "navx_p"] / 180 * pathfinder.boundHalfDegrees(
                     pathfinder.r2d(self.left.getHeading()) -

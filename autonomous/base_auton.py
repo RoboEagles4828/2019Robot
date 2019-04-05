@@ -9,7 +9,7 @@ class BaseAuton(AutonomousStateMachine):
 
     @state(first=True)
     def init(self):
-        self.auto_drive.set("auton0")
+        self.auto_drive.setTrajectories("auton0")
         self.status = 0
         self.next_state("driving")
 
@@ -17,8 +17,8 @@ class BaseAuton(AutonomousStateMachine):
     def driving(self, initial_call):
         if initial_call:
             self.auto_drive.enable()
-        status = self.auto_drive.getStatus()
-        if status > self.status:
+        if self.auto_drive.isFinished():
             self.auto_drive.disable()
-            self.next_state("status_%d" % status)
-            self.status = status
+            self.auto_drive.next()
+            self.next_state("status_%d" % self.status)
+            self.status += 1

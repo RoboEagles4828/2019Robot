@@ -21,11 +21,11 @@ class PathGenerator:
             max_jerk=max_jerk)[1]
 
     @staticmethod
-    def set(name, trajectory):
+    def set(name, trajectories):
         with open(
                 sys.path[0] + ("/../" if os.getcwd()[-5:-1] == "test" else "/")
                 + "%s.pickle" % name, "wb") as f:
-            pickle.dump(trajectory, f)
+            pickle.dump(trajectories, f)
 
     @staticmethod
     def get(name):
