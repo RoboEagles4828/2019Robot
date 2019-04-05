@@ -19,11 +19,13 @@ class AutoDrive:
             self.config = json.load(f)
         # Set default trajectory
         self.setTrajectories(self.config["drive"]["default_name"])
-        self.set(0)
         # Set trajectory position
         self.pos = 0
         # Set enabled
         self.enabled = False
+
+    def setup(self):
+        self.set(0)
 
     def set(self, pos):
         # Get trajectory
@@ -35,8 +37,8 @@ class AutoDrive:
         self.left = EncoderFollower(modifier.getLeftTrajectory())
         self.right = EncoderFollower(modifier.getRightTrajectory())
         # Configure encoders
-        self.left.configureEncoder(0, 4096, 0.2032)
-        self.right.configureEncoder(0, 4096, 0.2032)
+        self.left.configureEncoder(self.drive.getEncLeft(), 4096, 0.2032)
+        self.right.configureEncoder(self.drive.getEncRight(), 4096, 0.2032)
         # Set PIDVA values
         self.left.configurePIDVA(self.config["drive"]["left_p"],
                                  self.config["drive"]["left_i"],

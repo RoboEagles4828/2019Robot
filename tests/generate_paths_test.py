@@ -17,7 +17,7 @@ def test_generate_routes(robot):
             for point in path_config:
                 path.append(
                     pathfinder.Waypoint(point["x"], point["y"],
-                                        point["angle"]))
+                                        pathfinder.d2r(point["angle"])))
             trajectories.append(
                 PathGenerator.generate(
                     path, config["dt"], config["max_velocity"],
