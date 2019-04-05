@@ -219,13 +219,19 @@ class Robot(magicbot.MagicRobot):
         # Duck
         try:
             self.duck.set(self.getButton("duck", "set"))
-            self.duck.setServo(self.getButton("duck", "set"))
             self.duck.setServo(self.getButton("duck", "set_servo"))
+            self.duck.setServo(self.getButton("duck", "set"))
         except:
             self.onException()
         # Dumper
         try:
             self.dumper.set(self.getButton("dumper", "set"))
+            self.dumper.setExtender(self.getButton("dumper", "set_extender"))
+        except:
+            self.onException()
+        # Sweeper
+        try:
+            self.sweeper.set(self.getButton("sweeper", "set"))
         except:
             self.onException()
         # Auto Lift

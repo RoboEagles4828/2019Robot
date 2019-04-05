@@ -1,8 +1,11 @@
 {
     "joystick_0": {
         "duck": {
-            "set": 2,
-            "set_servo": 1
+            "set": 1,
+            "set_servo": 2
+        },
+        "sweeper": {
+            "set": 12
         }
     },
     "joystick_1": {
@@ -18,10 +21,11 @@
             "front_pos_down": 15,
             "back_pos_up": 14,
             "back_pos_down": 16,
-            "enable": 2
+            "enable": 10
         },
         "dumper": {
-            "set": 1
+            "set": 1,
+            "set_extender": 2
         }
     }
 }
