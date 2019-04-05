@@ -28,8 +28,8 @@ class Duck:
         self.duck_solenoid.set(wpilib.DoubleSolenoid.Value.kForward if self.
                                pos else wpilib.DoubleSolenoid.Value.kReverse)
         if self.servo_pos:
-            self.duck_servo_0.set(self.config["servo"]["pos_0_open"])
-            self.duck_servo_1.set(self.config["servo"]["pos_1_open"])
+            self.duck_servo_0.set(self.config["servo"]["pos_0_out"])
+            self.duck_servo_1.set(self.config["servo"]["pos_1_out"])
         else:
-            self.duck_servo_0.set(self.config["servo"]["pos_0_close"])
-            self.duck_servo_1.set(self.config["servo"]["pos_1_close"])
+            self.duck_servo_0.set(self.config["servo"]["pos_0_in"])
+            self.duck_servo_1.set(self.config["servo"]["pos_1_in"])

@@ -24,7 +24,13 @@
     "dumper": {
         "up": 0,
         "down": 2,
+        "extender_out": 1,
+        "extender_in": 4,
         "servo": 9,
         "prox": 9
+    },
+    "sweeper": {
+        "servo_0": 6,
+        "servo_1": 5
     }
 }

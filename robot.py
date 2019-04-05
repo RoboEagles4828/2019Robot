@@ -11,10 +11,11 @@ from digital_input import DigitalInput
 from analog_input import AnalogInput
 from components.low.drivetrain import Drivetrain
 from components.low.lift import Lift
+from components.low.duck import Duck
 from components.low.dumper import Dumper
+from components.low.sweeper import Sweeper
 from components.high.pathfinder.auto_drive import AutoDrive
 from components.high.auto_lift import AutoLift
-from components.low.duck import Duck
 
 
 class Robot(magicbot.MagicRobot):
@@ -23,6 +24,7 @@ class Robot(magicbot.MagicRobot):
     lift: Lift
     duck: Duck
     dumper: Dumper
+    sweeper: Sweeper
     auto_drive: AutoDrive
     auto_lift: AutoLift
 
@@ -83,10 +85,16 @@ class Robot(magicbot.MagicRobot):
         # Dumper
         self.dumper_solenoid = wpilib.DoubleSolenoid(
             self.ports["dumper"]["up"], self.ports["dumper"]["down"])
+        self.dumper_extender = wpilib.DoubleSolenoid(
+            self.ports["dumper"]["extender_out"],
+            self.ports["dumper"]["extender_in"])
         self.dumper_servo = wpilib.Servo(self.ports["dumper"]["servo"])
         self.dumper_prox = DigitalInput(
             wpilib.DigitalInput(self.ports["dumper"]["prox"]).get)
         self.inputs.append(self.dumper_prox)
+        # Sweeper
+        self.sweeper_servo_0 = wpilib.Servo(self.ports["sweeper"]["servo_0"])
+        self.sweeper_servo_1 = wpilib.Servo(self.ports["sweeper"]["servo_1"])
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
         self.navx_yaw = AnalogInput(

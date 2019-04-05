@@ -1,7 +1,7 @@
 {
     "servo": {
-        "on": 1.00,
-        "off": 0.00
+        "pos_out": 1.00,
+        "pos_in": 0.00
     },
     "servo_delay": 0.3
 }
