@@ -28,7 +28,7 @@
         "extender_in": 6,
         "servo_0": 4,
         "servo_1": 8,
-        "prox": 9
+        "prox": 2
     },
     "sweeper": {
         "servo_0": 9,
