@@ -163,6 +163,8 @@ class Robot(magicbot.MagicRobot):
         #cs.setFPS(10)
         # LiveWindow
         wpilib.LiveWindow.disableAllTelemetry()
+        # Compressor
+        wpilib.Compressor(0).setClosedLoopControl(True)
 
     def teleopInit(self):
         self.navx.reset()
