@@ -26,11 +26,11 @@
         "down": 2,
         "extender_out": 1,
         "extender_in": 4,
-        "servo": 9,
+        "servo": 4,
         "prox": 9
     },
     "sweeper": {
-        "servo_0": 6,
-        "servo_1": 5
+        "servo_0": 8,
+        "servo_1": 7
     }
 }
