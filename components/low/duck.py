@@ -17,6 +17,8 @@ class Duck:
             self.config = json.load(f)
         self.pos = False
         self.servo_pos = False
+        self.servo_timer = wpilib.Timer()
+        self.servo_timer_started = False
 
     def set(self, pos):
         self.pos = pos
@@ -25,11 +27,21 @@ class Duck:
         self.servo_pos = pos
 
     def execute(self):
-        self.duck_solenoid.set(wpilib.DoubleSolenoid.Value.kForward if self.
-                               pos else wpilib.DoubleSolenoid.Value.kReverse)
+        # Set servos
         if self.servo_pos:
             self.duck_servo_0.set(self.config["servo"]["pos_0_out"])
             self.duck_servo_1.set(self.config["servo"]["pos_1_out"])
         else:
             self.duck_servo_0.set(self.config["servo"]["pos_0_in"])
             self.duck_servo_1.set(self.config["servo"]["pos_1_in"])
+        # Set solenoid based on set position and servo timer
+        if self.pos:
+            if not self.servo_timer_started:
+                self.servo_timer.start()
+                self.servo_timer_started = True
+            elif self.servo_timer.hasPeriodPassed(self.config["servo_delay"]):
+                self.duck_solenoid.set(wpilib.DoubleSolenoid.Value.kForward)
+        else:
+            self.servo_timer.reset()
+            self.servo_timer_started = False
+            self.duck_solenoid.set(wpilib.DoubleSolenoid.Value.kReverse)

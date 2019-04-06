@@ -4,5 +4,6 @@
         "pos_0_in": 0.55,
         "pos_1_out": 0.55,
         "pos_1_in": 0.88
-    }
+    },
+    "servo_delay": 0.1
 }
