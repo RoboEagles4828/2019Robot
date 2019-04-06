@@ -1,8 +1,8 @@
 {
     "servo": {
-        "pos_0_out": 0.55,
-        "pos_0_in": 0.18,
-        "pos_1_out": 0.88,
-        "pos_1_in": 0.55
+        "pos_0_out": 0.18,
+        "pos_0_in": 0.55,
+        "pos_1_out": 0.55,
+        "pos_1_in": 0.88
     }
 }
