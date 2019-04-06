@@ -2,7 +2,7 @@
     "joystick_0": {
         "duck": {
             "set": 1,
-            "set_servo": 2
+            "set_servo": 11
         }
     },
     "joystick_1": {
