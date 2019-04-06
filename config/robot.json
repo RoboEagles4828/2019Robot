@@ -1,7 +1,8 @@
 {
     "lift": {
         "drive_speed": 1.0,
-        "speed": 1.0
+        "speed": 1.0,
+        "filter_period": 3
     },
     "navx": {
         "average_period": 1

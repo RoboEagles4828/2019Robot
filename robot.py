@@ -66,13 +66,17 @@ class Robot(magicbot.MagicRobot):
         self.lift_front = ctre.WPI_TalonSRX(self.ports["lift"]["front"])
         self.lift_back = ctre.WPI_TalonSRX(self.ports["lift"]["back"])
         self.lift_prox_front = DigitalInput(
-            wpilib.DigitalInput(self.ports["lift"]["prox_front"]).get)
+            wpilib.DigitalInput(self.ports["lift"]["prox_front"]).get,
+            filter_period=self.config["lift"]["filter_period"])
         self.lift_prox_back = DigitalInput(
-            wpilib.DigitalInput(self.ports["lift"]["prox_back"]).get)
+            wpilib.DigitalInput(self.ports["lift"]["prox_back"]).get,
+            filter_period=self.config["lift"]["filter_period"])
         self.lift_limit_front = DigitalInput(
-            wpilib.DigitalInput(self.ports["lift"]["limit_front"]).get)
+            wpilib.DigitalInput(self.ports["lift"]["limit_front"]).get,
+            filter_period=self.config["lift"]["filter_period"])
         self.lift_limit_back = DigitalInput(
-            wpilib.DigitalInput(self.ports["lift"]["limit_back"]).get)
+            wpilib.DigitalInput(self.ports["lift"]["limit_back"]).get,
+            filter_period=self.config["lift"]["filter_period"])
         self.inputs.append(self.lift_prox_front)
         self.inputs.append(self.lift_prox_back)
         self.inputs.append(self.lift_limit_front)
