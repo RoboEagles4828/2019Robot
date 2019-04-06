@@ -1,8 +1,9 @@
 {
     "lift": {
         "drive_speed": 1.0,
-        "speed": 1.0,
-        "filter_period": 3
+        "up_speed": 1.0,
+        "down_speed": 0.5,
+        "filter_period": 0
     },
     "navx": {
         "average_period": 1
@@ -12,6 +13,6 @@
         "average_period": 1,
         "twist_ratio": 0.8
     },
-    "delay": 0.03,
+    "delay": 0.01,
     "use_auton": 0
 }
