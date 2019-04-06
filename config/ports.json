@@ -16,16 +16,16 @@
         "limit_back": 5
     },
     "duck": {
-        "out": 3,
-        "in": 5,
+        "out": 1,
+        "in": 6,
         "servo_0": 3,
         "servo_1": 2
     },
     "dumper": {
         "up": 0,
-        "down": 2,
-        "extender_out": 1,
-        "extender_in": 4,
+        "down": 7,
+        "extender_out": 2,
+        "extender_in": 5,
         "servo": 4,
         "prox": 9
     },
