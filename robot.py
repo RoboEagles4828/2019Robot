@@ -219,8 +219,9 @@ class Robot(magicbot.MagicRobot):
         # Duck
         try:
             self.duck.set(self.getButton("duck", "set"))
-            self.duck.setServo(self.getButton("duck", "set_servo"))
-            self.duck.setServo(self.getButton("duck", "set"))
+            self.duck.setServo(
+                self.getButton("duck", "set")
+                or self.getButton("duck", "set_servo"))
         except:
             self.onException()
         # Dumper

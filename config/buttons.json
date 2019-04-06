@@ -3,9 +3,6 @@
         "duck": {
             "set": 1,
             "set_servo": 2
-        },
-        "sweeper": {
-            "set": 12
         }
     },
     "joystick_1": {
@@ -26,6 +23,9 @@
         "dumper": {
             "set": 1,
             "set_extender": 2
+        },
+        "sweeper": {
+            "set": 8
         }
     }
 }
