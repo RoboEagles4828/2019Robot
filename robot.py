@@ -82,15 +82,17 @@ class Robot(magicbot.MagicRobot):
         self.inputs.append(self.lift_limit_front)
         self.inputs.append(self.lift_limit_back)
         # Duck
-        self.duck_solenoid = wpilib.DoubleSolenoid(self.ports["duck"]["out"],
+        self.duck_solenoid = wpilib.DoubleSolenoid(self.ports["pcm"],
+                                                   self.ports["duck"]["out"],
                                                    self.ports["duck"]["in"])
         self.duck_servo_0 = wpilib.Servo(self.ports["duck"]["servo_0"])
         self.duck_servo_1 = wpilib.Servo(self.ports["duck"]["servo_1"])
         # Dumper
         self.dumper_solenoid = wpilib.DoubleSolenoid(
-            self.ports["dumper"]["up"], self.ports["dumper"]["down"])
+            self.ports["pcm"], self.ports["dumper"]["up"],
+            self.ports["dumper"]["down"])
         self.dumper_extender = wpilib.DoubleSolenoid(
-            self.ports["dumper"]["extender_out"],
+            self.ports["pcm"], self.ports["dumper"]["extender_out"],
             self.ports["dumper"]["extender_in"])
         self.dumper_servo = wpilib.Servo(self.ports["dumper"]["servo"])
         self.dumper_prox = DigitalInput(

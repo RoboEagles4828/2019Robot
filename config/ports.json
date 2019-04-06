@@ -32,5 +32,6 @@
     "sweeper": {
         "servo_0": 9,
         "servo_1": 7
-    }
+    },
+    "pcm": 10
 }
