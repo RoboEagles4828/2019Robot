@@ -193,25 +193,25 @@ class Robot(magicbot.MagicRobot):
                     self.lift.setDriveSpeed(0)
             if self.getButton("lift", "front_up"):
                 self.auto_lift.disable()
-                self.lift.setFrontSpeed(self.config["lift"]["up_speed"])
+                self.lift.setFrontSpeed(self.config["lift"]["speed"])
             elif self.getButton("lift", "front_down"):
                 self.auto_lift.disable()
-                self.lift.setFrontSpeed(-self.config["lift"]["down_speed"])
+                self.lift.setFrontSpeed(-self.config["lift"]["speed"])
             else:
                 if not self.auto_lift.isEnabled():
                     self.lift.setFrontSpeed(0)
             if self.getButton("lift", "back_up"):
                 self.auto_lift.disable()
-                self.lift.setBackSpeed(self.config["lift"]["up_speed"])
+                self.lift.setBackSpeed(self.config["lift"]["speed"])
             elif self.getButton("lift", "back_down"):
                 self.auto_lift.disable()
-                self.lift.setBackSpeed(-self.config["lift"]["down_speed"])
+                self.lift.setBackSpeed(-self.config["lift"]["speed"])
             else:
                 if not self.auto_lift.isEnabled():
                     self.lift.setBackSpeed(0)
             if self.getButton("lift", "up"):
                 self.auto_lift.disable()
-                self.auto_lift.set(self.config["lift"]["up_speed"])
+                self.auto_lift.set(self.config["lift"]["speed"])
             elif self.getButton("lift", "down"):
                 self.auto_lift.disable()
                 self.auto_lift.set(-self.config["lift"]["down_speed"])
