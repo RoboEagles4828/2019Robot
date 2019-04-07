@@ -1,6 +1,8 @@
-import json
 import sys
-from pyfrc.physics import drivetrains
+import os
+import json
+from pyfrc.physics import motor_cfgs, tankmodel
+from pyfrc.physics.units import units
 
 
 class PhysicsEngine:
@@ -11,8 +13,18 @@ class PhysicsEngine:
         """
         self.physics_controller = physics_controller
         # Load ports
-        with open(sys.path[0] + "/ports.json") as f:
+        with open(sys.path[0] +
+                  ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
+                  "config/ports.json") as f:
             self.ports = json.load(f)
+        # Drivetrain
+        self.drivetrain = tankmodel.TankModel.theory(
+            motor_cfgs.MOTOR_CFG_CIM,
+            robot_mass=90 * units.lbs,
+            gearing=10.71,
+            nmotors=2,
+            x_wheelbase=2.0 * units.feet,
+            wheel_diameter=6 * units.inch)
 
     def update_sim(self, hal_data, now, tm_diff):
         """
@@ -23,10 +35,10 @@ class PhysicsEngine:
         :param tm_diff: The amount of time that has passed since the last
                         time that this function was called
         """
-        # Simulate the drivetrain
-        fl_motor = hal_data["pwm"][self.ports["drive"]["front_left"]]["value"]
-        fr_motor = hal_data["pwm"][self.ports["drive"]["front_right"]]["value"]
-
-        speed, rotation_speed = drivetrains.TwoMotorDrivetrain().get_vector(
-            -fl_motor, fr_motor)
-        self.physics_controller.drive(speed, rotation_speed, tm_diff)
+        # Get motors
+        fl_motor = hal_data["pwm"][self.ports["drive"]["front_left"]]
+        fr_motor = hal_data["pwm"][self.ports["drive"]["front_right"]]
+        # Simulate drivetrain
+        x, y, angle = self.drivetrain.get_distance(-fl_motor["value"],
+                                                   fr_motor["value"], tm_diff)
+        self.physics_controller.distance_drive(x, y, angle)

@@ -1,28 +1,22 @@
 import logging
-import json
 import sys
 import os
+import json
 import magicbot
 import wpilib
 import navx
 
-from digital_input import DigitalInput
 from analog_input import AnalogInput
-from components.low.drivetrain import DriveTrain
-from components.low.dumper import Dumper
+from components.low.drivetrain import Drivetrain
 
 
 class Robot(magicbot.MagicRobot):
 
-    drive: DriveTrain
-    dumper: Dumper
+    drive: Drivetrain
 
     def createObjects(self):
         # Get logger
         self.logger = logging.getLogger("Robot")
-        # Set MagicRobot constants
-        self.control_loop_wait_time = 0.03
-        self.use_teleop_in_autonomous = True
         # Load ports, buttons, and config
         with open(sys.path[0] +
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
@@ -36,6 +30,9 @@ class Robot(magicbot.MagicRobot):
                   ("/../" if os.getcwd()[-5:-1] == "test" else "/") +
                   "config/robot.json") as f:
             self.config = json.load(f)
+        # Set MagicRobot constants
+        self.control_loop_wait_time = self.config["delay"]
+        self.use_teleop_in_autonomous = not self.config["use_auton"]
         # Create input list
         self.inputs = []
         # Drive
@@ -43,13 +40,6 @@ class Robot(magicbot.MagicRobot):
         self.front_right = wpilib.Spark(self.ports["drive"]["front_right"])
         self.back_left = wpilib.Spark(self.ports["drive"]["back_left"])
         self.back_right = wpilib.Spark(self.ports["drive"]["back_right"])
-        # Dumper
-        self.dumper_solenoid = wpilib.DoubleSolenoid(
-            self.ports["dumper"]["up"], self.ports["dumper"]["down"])
-        self.dumper_servo = wpilib.Servo(self.ports["dumper"]["servo"])
-        self.dumper_prox = DigitalInput(
-            wpilib.DigitalInput(self.ports["dumper"]["prox"]).get)
-        self.inputs.append(self.dumper_prox)
         # Navx
         self.navx = navx.ahrs.AHRS.create_spi()
         self.navx_yaw = AnalogInput(
@@ -111,6 +101,8 @@ class Robot(magicbot.MagicRobot):
         #cs.setFPS(10)
         # LiveWindow
         wpilib.LiveWindow.disableAllTelemetry()
+        # Compressor
+        wpilib.Compressor(0).setClosedLoopControl(True)
 
     def teleopInit(self):
         self.navx.reset()
@@ -120,11 +112,6 @@ class Robot(magicbot.MagicRobot):
         try:
             self.drive.set(self.joystick_0_x.get(), self.joystick_0_y.get(),
                            self.joystick_0_twist.get())
-        except:
-            self.onException()
-        # Dumper
-        try:
-            self.dumper.set(self.getButton("dumper", "set"))
         except:
             self.onException()
         # Debug
