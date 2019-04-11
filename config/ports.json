@@ -1,0 +1,38 @@
+{
+    "drive": {
+        "front_left": 1,
+        "front_right": 3,
+        "back_left": 2,
+        "back_right": 4
+    },
+    "lift": {
+        "drive_left": 9,
+        "drive_right": 10,
+        "front": 5,
+        "back": 6,
+        "prox_front": 0,
+        "prox_back": 1,
+        "limit_front": 3,
+        "limit_back": 5
+    },
+    "duck": {
+        "out": 2,
+        "in": 5,
+        "servo_0": 3,
+        "servo_1": 2
+    },
+    "dumper": {
+        "up": 0,
+        "down": 7,
+        "extender_out": 4,
+        "extender_in": 1,
+        "servo_0": 4,
+        "servo_1": 8,
+        "prox": 2
+    },
+    "sweeper": {
+        "servo_0": 9,
+        "servo_1": 7
+    },
+    "pcm": 11
+}

@@ -1,0 +1,31 @@
+{
+    "joystick_0": {
+        "duck": {
+            "set": 1,
+            "set_servo": 11
+        }
+    },
+    "joystick_1": {
+        "lift": {
+            "drive": 12,
+            "front_up": 5,
+            "front_down": 3,
+            "back_up": 6,
+            "back_down": 4,
+            "up": 9,
+            "down": 11,
+            "front_pos_up": 13,
+            "front_pos_down": 15,
+            "back_pos_up": 14,
+            "back_pos_down": 16,
+            "enable": 10
+        },
+        "dumper": {
+            "set": 1,
+            "set_extender": 2
+        },
+        "sweeper": {
+            "set": 8
+        }
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "servo": {
+        "pos_0_out": 1.00,
+        "pos_0_in": 0.50,
+        "pos_1_out": 1.00,
+        "pos_1_in": 0.64
+    },
+    "servo_delay": 0.3
+}

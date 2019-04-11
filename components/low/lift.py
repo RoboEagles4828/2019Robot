@@ -3,25 +3,29 @@ import wpilib
 import ctre
 import navx
 
+from digital_input import DigitalInput
+from analog_input import AnalogInput
+
+
 class Lift:
 
-    navx: navx.AHRS
     lift_front: ctre.WPI_TalonSRX
     lift_back: ctre.WPI_TalonSRX
     lift_drive_left: ctre.WPI_VictorSPX
     lift_drive_right: ctre.WPI_VictorSPX
-    lift_prox_front: wpilib.DigitalInput
-    lift_prox_back: wpilib.DigitalInput
-    lift_limit_front: wpilib.DigitalInput
-    lift_limit_back: wpilib.DigitalInput
+    lift_prox_front: DigitalInput
+    lift_prox_back: DigitalInput
+    lift_limit_front: DigitalInput
+    lift_limit_back: DigitalInput
+    navx_pitch: AnalogInput
 
     def __init__(self):
         self.logger = logging.getLogger("Lift")
         self.drive_speed = 0
         self.front_speed = 0
         self.back_speed = 0
-        self.front_pos = 0
-        self.back_pos = 0
+        self.front_pos = -1
+        self.back_pos = -1
 
     def disable(self):
         self.drive_speed = 0
@@ -37,8 +41,17 @@ class Lift:
     def setBackSpeed(self, speed):
         self.back_speed = speed
 
+    def getDriveSpeed(self):
+        return self.drive_speed
+
+    def getFrontSpeed(self):
+        return self.front_speed
+
+    def getBackSpeed(self):
+        return self.back_speed
+
     def getProxFront(self):
-        return not self.lift_prox_front.get()
+        return self.lift_prox_front.get()
 
     def getProxBack(self):
         return not self.lift_prox_back.get()
@@ -55,14 +68,27 @@ class Lift:
     def getBackPos(self):
         return self.back_pos
 
-    def debugNavx(self):
-        return self.navx.getPitch()
+    def setFrontPos(self, pos):
+        self.front_pos = pos
+
+    def setBackPos(self, pos):
+        self.back_pos = pos
+
+    def getNavx(self):
+        return self.navx_pitch.get()
 
     def execute(self):
-        if self.getLimitFront() and self.front_speed != 0:
+        # Get positions
+        if self.front_pos == 0 and self.getLimitFront(
+        ) and self.front_speed != 0:
             self.front_pos = self.front_speed / abs(self.front_speed)
-        if self.getLimitBack() and self.back_speed != 0:
+        if self.front_pos != 0 and not self.getLimitFront():
+            self.front_pos = 0
+        if self.back_pos == 0 and self.getLimitBack() and self.back_speed != 0:
             self.back_pos = self.back_speed / abs(self.back_speed)
+        if self.back_pos != 0 and not self.getLimitBack():
+            self.back_pos = 0
+        # Check positions and speeds
         if self.front_pos == 1 and self.front_speed > 0:
             self.front_speed = 0
         if self.front_pos == -1 and self.front_speed < 0:
@@ -71,6 +97,7 @@ class Lift:
             self.back_speed = 0
         if self.back_pos == -1 and self.back_speed < 0:
             self.back_speed = 0
+        # Set motors
         self.lift_front.set(self.front_speed)
         self.lift_back.set(self.back_speed)
         self.lift_drive_left.set(self.drive_speed)
